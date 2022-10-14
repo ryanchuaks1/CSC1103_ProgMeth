@@ -8,7 +8,6 @@ enum GameMode
 
 void MultiplayerMode();
 void BotsMode(int difficultyMode);
-
 int CheckWinConditions(char *board);
 void GenerateBoard(char *board);
 void GenerateSquare();
@@ -18,7 +17,6 @@ void MakeMove(char symbol, int position, char *board);
 int main(void)
 {
     int gameSelection;
-
     do
     {
         printf("Select game mode \n");
