@@ -73,7 +73,7 @@ void MultiplayerMode()
         }
         else if (result == 2)
         {
-            printf("There is no winner");
+            printf("There is no winner \n");
             inGame = 0;
         }
         player = !player;
@@ -134,6 +134,18 @@ int CheckWinConditions(char *board)
     }
     else
     {
+        int count = 0;
+        for (int i = 0; i < sizeof(board); i++)
+        {
+            if (board[i] == 'X' || board[i] == 'O')
+            {
+                count++;
+            }
+        }
+        if (count == sizeof(board))
+        {
+            return 2;
+        }
         return 0;
     }
 }
