@@ -1,1 +1,1 @@
-gcc test.c -o test -O1 -Wall -std=c99 -Wno-missing-braces -L ./lib/ -lraylib -lopengl32 -lgdi32 -lwinmm
+gcc objects/main.o objects/functions.o -o main -O2 -Wall -std=c99 -Wno-missing-braces -Llib/   -lraylib -lopengl32 -lgdi32 -lwinmm
