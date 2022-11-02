@@ -14,9 +14,8 @@ int checkButton(Rectangle buttons[3]);
  *
  * 	This is a tic tac toe game powered by raylib
  * 	The main menu UI consist of 3 buttons, 1p mode 2p mode and exit button
- * 	There is also a audio mute button
  *
- * 	@authors
+ * 	@authors Ryan, Kang Le, Clarissa, Xavier, Sean
  *
  */
 int main(void)
@@ -64,6 +63,8 @@ int main(void)
 	Texture2D menuBackground = LoadTexture("resources/menu_background.png");
 	Texture2D gamebackground = LoadTexture("resources/game_background.png");
 	float textureScroll = 0.0f;
+	int framesCounter = 0;					  // Variable to count frames (currently use for the main menu)
+	const char gameTitle[64] = "Tic-Tac-Toe"; // Main title of the game
 
 	// Audio
 	InitAudioDevice();												  // Initialize audio device
@@ -86,12 +87,13 @@ int main(void)
 	/**
 	 *
 	 *	@brief Draw the all the textures
-	 * 	@param RenderTexture2D refer to https://www.raylib.com/cheatsheet/cheatsheet.html
-	 * 	@param BeginTextureMode refer to https://www.raylib.com/cheatsheet/cheatsheet.html
-	 * 	@param ClearBackground refer to https://www.raylib.com/cheatsheet/cheatsheet.html
-	 * 	@param DrawRectanglePro refer to https://www.raylib.com/cheatsheet/cheatsheet.html
-	 * 	@param DrawCircle refer to https://www.raylib.com/cheatsheet/cheatsheet.html
-	 * 	@param EndTextureMode refer to https://www.raylib.com/cheatsheet/cheatsheet.html
+	 * 	@param RenderTexture2D
+	 * 	@param BeginTextureMode
+	 * 	@param ClearBackground
+	 * 	@param DrawRectanglePro
+	 * 	@param DrawCircle
+	 * 	@param EndTextureMode
+	 *  refer to https://www.raylib.com/cheatsheet/cheatsheet.html
 	 *
 	 * 	@authors
 	 *
@@ -100,14 +102,14 @@ int main(void)
 	RenderTexture2D X = LoadRenderTexture(gridSize, gridSize); // Load texture for rendering (framebuffer)
 	RenderTexture2D O = LoadRenderTexture(gridSize, gridSize); // Load texture for rendering (framebuffer)
 
-	BeginTextureMode(X);	// Begin drawing to render texture
+	BeginTextureMode(X);	// Begin drawing to render texture X
 	ClearBackground(WHITE); // Background color of the X
 	// (posX, posY, height, width)
 	DrawRectanglePro((Rectangle){35, 13, gridSize - 5, 25}, (Vector2){0, 0}, 45.0f, RED);
 	DrawRectanglePro((Rectangle){135, 30, gridSize - 5, 25}, (Vector2){0, 0}, 135.0f, RED);
 	EndTextureMode(); // Ends drawing to render texture
 
-	BeginTextureMode(O);	// Begin drawing to render texture
+	BeginTextureMode(O);	// Begin drawing to render texture O
 	ClearBackground(WHITE); // Background color of the O
 	// (posX, posY, radius, color)
 	DrawCircle(gridSize / 2, gridSize / 2, gridSize / 2 - 5, BLUE); // Outer circle
@@ -127,50 +129,56 @@ int main(void)
 		 *
 		 *	@brief Checks which navigation state the game is at
 		 * 	@param currentScreen 0 = Home, 1 = Difficulty, 2 = Player selection, 3 = Main game
+		 * 	@param DrawText (*text, posX, posY, fontSize, color)
 		 *	@if case 0 = Home
 
-		 * 	@authors
+		 * 	@authors Ryan, Kang Le, Clarissa
 		 *
 		 */
 		switch (currentScreen) // When the variable of currentScreen changes, it will change screen accordingly
 		{
-		case 0:									  // Home screen
-			pressedButton = checkButton(buttons); // Check which button has been pressed and assign it to pressButton
-			if ((pressedButton == 0) && IsMouseButtonPressed(0))
+		case 0:													 // Home screen
+			pressedButton = checkButton(buttons);				 // Check which button has been pressed and assign it to pressedButton
+			if ((pressedButton == 0) && IsMouseButtonPressed(0)) // Two player is clicked
 			{
 				PlaySound(gameStartSound);
-				currentScreen = 3;
+				currentScreen = 3; // Move to game screen
 			}
-			else if ((pressedButton == 1) && IsMouseButtonPressed(0))
+			else if ((pressedButton == 1) && IsMouseButtonPressed(0)) // VS AI is clicked
 			{
 				PlaySound(buttonClickSound);
-				currentScreen = 1;
+				currentScreen = 1; // Move to select difficulty
 			}
 			else if (pressedButton == 2 && IsMouseButtonPressed(0))
 			{
-				// Exit the game
-				goto EXIT;
+				goto EXIT; // Exit the game
 			}
 
 			BeginDrawing(); // Setup canvas (framebuffer) to start drawing
 			BeginTextureMode(screen);
 
-			// Render menuBackground and write header
+			// Render Menu Background and write header
 			ClearBackground(WHITE);
 			textureScroll -= 0.5f;
 			if (textureScroll <= -menuBackground.width * 2)
 				textureScroll = 0;
 			DrawTextureEx(menuBackground, (Vector2){textureScroll, 0}, 0.0f, 2.0f, WHITE);
 			DrawTextureEx(menuBackground, (Vector2){menuBackground.width * 2 + textureScroll, 0}, 0.0f, 2.0f, WHITE);
-			DrawText("Tic-Tac-Toe", 100, 60, 90, BLACK);
+
+			// TextSubtext() Gets a piece of a text string
+			// @params *text, starting position, speed);
+			framesCounter++;
+			DrawText(TextSubtext(gameTitle, 0, framesCounter / 4), 100, 60, 90, BLACK);
 
 			// Draw the buttons
 			for (int i = 0; i < 3; i++)
 			{
-				DrawRectangleRounded(buttons[i], 0.2, 5, (pressedButton == i) ? BLACK : DARKGRAY);
-				DrawRectangleRounded((Rectangle){buttons[i].x + 10, buttons[i].y + 10, 280, 80}, 0.2, 5, WHITE);
+				// rectangle(already declared initially), roundness, segments, olor
+				DrawRectangleRounded(buttons[i], 0.2, 5, (pressedButton == i) ? BLACK : DARKGRAY);				 // Border
+				DrawRectangleRounded((Rectangle){buttons[i].x + 10, buttons[i].y + 10, 280, 80}, 0.2, 5, WHITE); // Text
 			}
 
+			// Draw text into the buttons
 			DrawText("Two Player", 275, 288, 45, (pressedButton == 0) ? BLACK : DARKGRAY);
 			DrawText("Vs AI", 330, 408, 45, (pressedButton == 1) ? BLACK : DARKGRAY);
 			DrawText("Exit", 360, 528, 45, (pressedButton == 2) ? BLACK : DARKGRAY);
@@ -461,8 +469,8 @@ int mouseCollide(Vector2 mousePos, Vector2 gridPos, int gridSize, int gridThickn
 
 /**
  * @brief Check which button the mouse is over
- *
  * @param buttons
+ *
  * @return which button is pressed 0, 1, 2 or -1 if not
  */
 int checkButton(Rectangle buttons[3])
