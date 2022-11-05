@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "screens.h": "c",
+        "raylib.h": "c",
+        "helpers.h": "c",
+        "tic-tac-toe.h": "c",
+        "*.png": "c"
+    }
+}
