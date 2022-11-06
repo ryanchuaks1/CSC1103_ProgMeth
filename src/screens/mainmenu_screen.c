@@ -1,17 +1,17 @@
 #include "../../include/screens.h"
 #include "../../include/raylib.h"
 #include "../../include/helpers.h"
-#include <stdio.h>
 
-RenderTexture2D screenTexture;
-Texture2D menuBackground;
-Sound buttonClickSound;
-Sound gameStartSound;
+// Static doesn't matter in this instances because we have an initialised function for each screens.
+static RenderTexture2D screenTexture;
+static Texture2D menuBackground;
+static Sound buttonClickSound;
+static Sound gameStartSound;
 static float textureScroll;
 static int framesCounter;
 static int checkButtonHovering;
 
-int finishExitCode = -1;
+static int finishExitCode = -1;
 
 static Rectangle menuButton[3] = {
     (Rectangle){250, 260, 300, 100}, // Multiplayer
@@ -21,16 +21,17 @@ static Rectangle menuButton[3] = {
 
 void InitMainMenuScreen()
 {
-    screenTexture = LoadRenderTexture(GetScreenWidth(), GetScreenHeight());
-    menuBackground = LoadTexture("../resources/menu_background.png"); // Not sure if we will be able to load resources like that.
-	buttonClickSound = LoadSound("../resources/button_click.wav");
+    finishExitCode = -1;
 
     textureScroll = 0.0f;
     framesCounter = 0;
     checkButtonHovering = -1;
 
-    // Not working in WSL. Apparently has some sound issue in WSL
-    // InitAudioDevice();
+    screenTexture = LoadRenderTexture(800, 800);
+    menuBackground = LoadTexture("../resources/menu_background.png");
+
+    buttonClickSound = LoadSound("../resources/button_click.wav");
+    gameStartSound = LoadSound("../resources/button_click.wav");
 }
 
 void UpdateMainMenuScreen()
@@ -39,12 +40,12 @@ void UpdateMainMenuScreen()
     // Hovering is not enough we need to click it then we can attempt to call FinishMainMenu with an exit code.
     if ((checkButtonHovering == 0) && IsMouseButtonPressed(0))
     {
-        // PlaySound(gameStartSound);
+        PlaySound(gameStartSound);
         finishExitCode = 1;
     }
     else if ((checkButtonHovering == 1) && IsMouseButtonPressed(0))
     {
-        // PlaySound(gameStartSound);
+        PlaySound(buttonClickSound);
         finishExitCode = 2;
     }
     else if ((checkButtonHovering == 1) && IsMouseButtonPressed(0))
@@ -60,12 +61,7 @@ void UpdateMainMenuScreen()
     }
 
     // Allow the text title to slowly pop out on the screen
-    // framesCounter++;
-
-    if (IsKeyPressed(KEY_SPACE))
-    {
-        PlaySound(gameStartSound);
-    }
+    framesCounter++;
 }
 
 // Texture is currently not working. My guess is that the file path is wrong/
@@ -75,7 +71,6 @@ void DrawMainMenuScreen()
 	BeginTextureMode(screenTexture);
 
     ClearBackground(WHITE);
-
     DrawTextureEx(menuBackground, (Vector2){textureScroll, 0}, 0.0f, 2.0f, WHITE);
 	DrawTextureEx(menuBackground, (Vector2){menuBackground.width * 2 + textureScroll, 0}, 0.0f, 2.0f, WHITE);
     DrawText(TextSubtext("Tic-Tac-Toe", 0, framesCounter / 4), 100, 60, 90, BLACK);
@@ -90,6 +85,7 @@ void DrawMainMenuScreen()
 	DrawText("Exit", 360, 528, 45, (checkButtonHovering == 2) ? BLACK : DARKGRAY);
 
     EndTextureMode();
+    DrawTextureRec(screenTexture.texture, (Rectangle){0, 0, 800, -800}, (Vector2){0, 0}, WHITE);
     EndDrawing();
 }
 

@@ -12,6 +12,14 @@ static void ChangeToScreen(enum GameScreen nextScreen);
 int main(void)
 {
     InitWindow(800, 800, "Tic-Tac-Toe");
+
+    // Just let main have the audio device so it can propagate down to the screens.
+    InitAudioDevice();
+    Sound backgroundMusic = LoadSound("../resources/fall-music.wav");
+
+    SetSoundVolume(backgroundMusic, 0.5);
+    PlaySound(backgroundMusic);
+
     // Set initial screen to MainMenuScreen();
     currentScreen = MainMenuScreen;
     InitMainMenuScreen();
@@ -35,6 +43,7 @@ int main(void)
             break;
     }
 
+    CloseAudioDevice();
     return 0;
 }
 
@@ -64,14 +73,17 @@ static void ChangeToScreen(enum GameScreen nextScreen)
     switch (nextScreen)
     {
         case MainMenuScreen:
+            printf("Attempting to switch to main menu screen \n");
             InitMainMenuScreen();
             break;
 
         case DifficultyScreen:
+            printf("Attempting to switch to difficulty screen \n");
             InitDifficultyScreen();
             break;
 
         case MultiplayerMode:
+            printf("Attempting to switch to gameplay screen \n");
             InitGameplayScreen(Multiplayer);
             break;
 
@@ -106,10 +118,6 @@ static void UpdateDrawFrame(void)
         case MainMenuScreen:
             UpdateMainMenuScreen();
             DrawMainMenuScreen();
-            // Returns exit code will will allow the program to lead to another page
-            // 1 = Multiplayer Mode
-            // 2 = VS AI (Will lead to another difficulty page)
-            // 3 =  Exit
             if (FinishMainMenuScreen() == 1)
             {
                 // Transition to another Screen
@@ -128,23 +136,12 @@ static void UpdateDrawFrame(void)
         case DifficultyScreen:
             UpdateDifficultyScreen();
             DrawDifficultyScreen();
-            // Check for options selected
-            // 1 = Medium AI
-            // 2 = Impossible AI
-            if (FinishDifficultyScreen() == 1)
-            {
-                ChangeToScreen(NormalAIMode);
-            }
-            else if (FinishDifficultyScreen() == 2)
-            {
-                ChangeToScreen(ImpossibleAIMode);
-            }
             break;
 
-        case MultiplayerMode:
+        case GameplayScreen:
             UpdateGameplayScreen();
             DrawGameplayScreen();
-            // Check for game won
+            break;
         
         default: break;
     }

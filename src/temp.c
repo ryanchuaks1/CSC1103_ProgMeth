@@ -1,4 +1,5 @@
-#include <stdio.h>
+
+WARNING: FILEIO: [resources/fall-music.wav] Failed to open file#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
