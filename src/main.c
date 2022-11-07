@@ -87,7 +87,7 @@ static void ChangeToScreen(enum GameScreen nextScreen)
             InitGameplayScreen(Multiplayer);
             break;
 
-        case NormalAIMode:
+        case MediumAIMode:
             InitGameplayScreen(MediumAI);
             break;
 
@@ -99,7 +99,7 @@ static void ChangeToScreen(enum GameScreen nextScreen)
     }
 
     // Another hacky solution that we have to redo sigh...
-    if (nextScreen == NormalAIMode || nextScreen == ImpossibleAIMode || nextScreen == MultiplayerMode)
+    if (nextScreen == MediumAIMode || nextScreen == ImpossibleAIMode || nextScreen == MultiplayerMode)
     {
         currentScreen = GameplayScreen;
     }
@@ -136,6 +136,18 @@ static void UpdateDrawFrame(void)
         case DifficultyScreen:
             UpdateDifficultyScreen();
             DrawDifficultyScreen();
+            if (FinishDifficultyScreen() == 1)
+            {
+                ChangeToScreen(MediumAIMode);
+            }
+            else if (FinishDifficultyScreen() == 2)
+            {
+                ChangeToScreen(ImpossibleAIMode);
+            }
+            else if (FinishDifficultyScreen() == 3)
+            {
+                ChangeToScreen(MainMenuScreen);                
+            }
             break;
 
         case GameplayScreen:

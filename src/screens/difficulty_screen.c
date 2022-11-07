@@ -5,10 +5,11 @@
 #include <stdio.h>
 
 static int finishExitCode = -1;
-static RenderTexture2D screen;
+static RenderTexture2D screenTexture;
 static Texture2D menuBackground;
 static Sound buttonClickSound;
 static int checkButtonHovering = -1;
+static float textureScroll;
 
 // TODO : Remove 1 of them as we only have 2 buttons
 static Rectangle menuButton[3] = {
@@ -19,21 +20,48 @@ static Rectangle menuButton[3] = {
 
 void InitDifficultyScreen()
 {
-    printf("Initializing difficulty screen");
-    printf("Button hover score is: %d", checkButtonHovering);
+    // Best to preset static variables.
     checkButtonHovering = -1;
+    finishExitCode = -1;
+    textureScroll = 0.0f;
+    screenTexture = LoadRenderTexture(GetScreenWidth(), GetScreenHeight());
+    menuBackground = LoadTexture("../resources/menu_background.png");
+    buttonClickSound = LoadSound("../resources/button_click.wav");
 }
 
 void UpdateDifficultyScreen()
 {
+    textureScroll -= 0.5f;
+	if (textureScroll <= -menuBackground.width * 2)
+    {
+		textureScroll = 0;
+    }
+
     checkButtonHovering = checkButton(menuButton);
+    if (checkButtonHovering == 0 && IsMouseButtonPressed(0))
+    {
+        PlaySound(buttonClickSound);
+        finishExitCode = 1;
+    }
+    else if (checkButtonHovering == 1 && IsMouseButtonPressed(0))
+    {
+        PlaySound(buttonClickSound);
+        finishExitCode = 2;
+    }
+    else if (checkButtonHovering == 2 && IsMouseButtonPressed(0))
+    {
+        finishExitCode = 3;
+    }
 }
 
 void DrawDifficultyScreen()
 {
     BeginDrawing();
+    BeginTextureMode(screenTexture);
 
     ClearBackground(WHITE);
+	DrawTextureEx(menuBackground, (Vector2){textureScroll, 0}, 0.0f, 2.0f, WHITE);
+	DrawTextureEx(menuBackground, (Vector2){menuBackground.width * 2 + textureScroll, 0}, 0.0f, 2.0f, WHITE);
     DrawText("Select Difficulty", 85, 100, 75, BLACK);
     for (int i = 0; i < 3; i++)
 	{
@@ -44,15 +72,20 @@ void DrawDifficultyScreen()
 	DrawText("Impossible", 292, 408, 45, (checkButtonHovering == 1) ? BLACK : DARKGRAY);
 	DrawText("Home", 350, 528, 45, (checkButtonHovering == 2) ? BLACK : DARKGRAY);
 
+    EndTextureMode();
+    DrawTextureRec(screenTexture.texture, (Rectangle){0, 0, GetScreenWidth(), -GetScreenHeight()}, (Vector2){0, 0}, WHITE);
     EndDrawing();
 }
 
 void UnloadDifficultyScreen()
 {
+    UnloadRenderTexture(screenTexture);
+    UnloadTexture(menuBackground);
+    UnloadSound(buttonClickSound);
 }
 
 /// @brief 
-/// @return (1 = Easy AI), (2 = Impossible AI)
+/// @return (1 = Mediu AI), (2 = Impossible AI), (3 = Back to Main Menu)
 int FinishDifficultyScreen()
 {
     return finishExitCode;

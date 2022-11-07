@@ -54,22 +54,83 @@ static void CreateCircleTexture(RenderTexture2D texture)
     EndTextureMode();
 }
 
+/// @brief Return a Move structure upon hovering on the board.
+static struct Move checkCollisionWithBoard()
+{
+    struct Move getHoveredMove;
+    Vector2 gridVectors = {155, 155};
+    for (int rows = 0; rows < 3; rows++)
+    {
+        for (int cols = 0; cols < 3; cols++)
+        {
+            // Check if the dimension has collided with the box
+            if (CheckCollisionPointRec(GetMousePosition(), (Rectangle){rows * (gridSize + gridThickness) + gridVectors.x, cols * (gridSize + gridThickness) + gridVectors.y, gridSize, gridSize}))
+            {
+                getHoveredMove.row = rows;
+                getHoveredMove.column = cols;
+            }
+            else
+            {
+                getHoveredMove.row = -1;
+                getHoveredMove.column = -1;
+            }
+        }
+    }
+    return getHoveredMove;
+}
+
+
 void UpdateGameplayScreen()
 {
-    // Move this out to a standalone function
-    // Ideally make this function return a struct Move
-    Vector2 gridVectors = (Vector2){155, 155};
-    for (int rows = 0; rows < 3; rows++)
-	{
-		for (int cols = 0; cols < 3; cols++)
-		{
-			if (CheckCollisionPointRec(GetMousePosition(), (Rectangle){rows * (gridSize + gridThickness) + gridVectors.x, cols * (gridSize + gridThickness) + gridVectors.y, gridSize, gridSize}))
-			{
-                // On hover it will immediately place an X on the screen.
-                board[rows][cols] = 'X';
-			}
-		}
-	}
+    struct Move uselessMove = checkCollisionWithBoard();
+    if (canMakeMove(board, uselessMove))
+    {
+        printf("Can make move on [%d][%d]\n", uselessMove.column, uselessMove.row);
+    }
+
+    // It's within while loop so the bottom part probably doesn't work
+    int playerTurn = 0;
+    if (gameMode == Multiplayer)
+    {
+        char playerChar = generatePlayerChar(playerTurn);
+        // Some function to get mouse hovered and get the moveHovered
+        struct Move mouseHoveredMove;
+        if (canMakeMove(board, mouseHoveredMove) && IsMouseButtonPressed(0))
+        {
+            makeMove(board, mouseHoveredMove, playerChar);
+            playerTurn = !playerTurn;
+        }
+    }
+    else if (gameMode == MediumAI)
+    {
+        // Wait for Sean
+    }
+    else if (gameMode == ImpossibleAIMode)
+    {
+        // First step always belong to the user
+        if (playerTurn == 0)
+        {
+            char playerChar = generatePlayerChar(playerTurn);
+            // Some function to get mouse hovered and get the moveHovered
+            struct Move mouseHoveredMove;
+            if (canMakeMove(board, mouseHoveredMove) && IsMouseButtonPressed(0))
+            {
+                makeMove(board, mouseHoveredMove, playerChar);
+                playerTurn = !playerTurn;
+            }
+        }
+        else
+        {
+            char playerChar = generatePlayerChar(playerTurn);
+            struct Move bestMove = getBestMove(board);
+            // By right we don't need this because internally canMakeMove already has the check
+            if (canMakeMove(board, bestMove))
+            {
+                makeMove(board, bestMove, playerChar);
+            }
+        }
+    }
+    // Winner check below
 }
 
 void DrawGameplayScreen()
@@ -103,7 +164,18 @@ void DrawGameplayScreen()
             }
         }
     }
-
+    if (checkWinner(board) == T)
+    {
+        DrawText("Draw", 145, 675, 75, BLACK);
+    }
+    else if (checkWinner(board) == X)
+    {
+        DrawText("Player X wins!", 145, 675, 75, BLACK);
+    }
+    else if (checkWinner(board) == O)
+    {
+        DrawText("Player O wins!", 145, 675, 75, BLACK);
+    }
 
     EndTextureMode();
     DrawTextureRec(screenTexture.texture, (Rectangle){0, 0, 800, -800}, (Vector2){0, 0}, WHITE);
