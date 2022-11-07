@@ -31,18 +31,10 @@ int main(void)
     // Check what screen it is currently on and call the respective Unload Function to destroy created data to prevent segmentation fault
     switch (currentScreen)
     {
-        case 1:
-            UnloadMainMenuScreen();
-            break;
-
-        case 2:
-            UnloadDifficultyScreen();
-            break;
-        
-        default:
-            break;
+        case 1: UnloadMainMenuScreen(); break;
+        case 2: UnloadDifficultyScreen(); break;
+        default: break;
     }
-
     CloseAudioDevice();
     return 0;
 }
@@ -54,47 +46,20 @@ static void ChangeToScreen(enum GameScreen nextScreen)
     // Unload existing screen to prevent any possible segmentation failure
     switch (currentScreen)
     {
-        case MainMenuScreen:
-            UnloadMainMenuScreen();
-            break;
-
-        case DifficultyScreen:
-            UnloadDifficultyScreen();
-            break;
-
-        case GameplayScreen:
-            UnloadGameplayScreen();
-            break;
-        
+        case MainMenuScreen: UnloadMainMenuScreen(); break;
+        case DifficultyScreen: UnloadDifficultyScreen(); break;
+        case GameplayScreen: UnloadGameplayScreen(); break;
         default: break;
     }
 
     // Load respective initialising for next respective screen
     switch (nextScreen)
     {
-        case MainMenuScreen:
-            printf("Attempting to switch to main menu screen \n");
-            InitMainMenuScreen();
-            break;
-
-        case DifficultyScreen:
-            printf("Attempting to switch to difficulty screen \n");
-            InitDifficultyScreen();
-            break;
-
-        case MultiplayerMode:
-            printf("Attempting to switch to gameplay screen \n");
-            InitGameplayScreen(Multiplayer);
-            break;
-
-        case NormalAIMode:
-            InitGameplayScreen(MediumAI);
-            break;
-
-        case ImpossibleAIMode:
-            InitGameplayScreen(ImpossibleAI);
-            break;
-
+        case MainMenuScreen: InitMainMenuScreen(); break;
+        case DifficultyScreen: InitDifficultyScreen(); break;
+        case MultiplayerMode: InitGameplayScreen(Multiplayer); break;
+        case NormalAIMode: InitGameplayScreen(MediumAI); break; 
+        case ImpossibleAIMode: InitGameplayScreen(ImpossibleAI); break;
         default : break;
     }
 
@@ -103,10 +68,7 @@ static void ChangeToScreen(enum GameScreen nextScreen)
     {
         currentScreen = GameplayScreen;
     }
-    else
-    {
-        currentScreen = nextScreen;
-    }
+    else currentScreen = nextScreen;
 }
 
 // Continuously looping
@@ -118,19 +80,9 @@ static void UpdateDrawFrame(void)
         case MainMenuScreen:
             UpdateMainMenuScreen();
             DrawMainMenuScreen();
-            if (FinishMainMenuScreen() == 1)
-            {
-                // Transition to another Screen
-                ChangeToScreen(MultiplayerMode);
-            }
-            else if (FinishMainMenuScreen() == 2)
-            {
-                ChangeToScreen(DifficultyScreen);
-            }
-            else if (FinishMainMenuScreen() == 3)
-            {
-                CloseWindow();
-            }
+            if (FinishMainMenuScreen() == 1) ChangeToScreen(MultiplayerMode);// Transition to another Screen
+            else if (FinishMainMenuScreen() == 2) ChangeToScreen(DifficultyScreen);
+            else if (FinishMainMenuScreen() == 3) CloseWindow();
             break;
 
         case DifficultyScreen:

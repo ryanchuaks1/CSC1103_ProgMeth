@@ -1,1 +1,1 @@
-gcc main.c mainmenu_screen.c difficulty_screen.c gameplay_screen.c helpers.c tic-tac-toe.c -I ./includes -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
+gcc src/main.c src/mainmenu_screen.c src/difficulty_screen.c src/gameplay_screen.c src/helpers.c src/tic-tac-toe.c -I ./includes -lraylib -lGL -lm -lpthread -ldl -lrt -lX11

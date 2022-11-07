@@ -1,13 +1,13 @@
+#include "../include/screens.h"
 #include "../include/raylib.h"
 #include "../include/helpers.h"
-#include "../include/screens.h"
-
 #include <stdio.h>
 
 static int finishExitCode = -1;
 static RenderTexture2D screenTexture;
 static Texture2D menuBackground;
 static Sound buttonClickSound;
+static Sound gameStartSound;
 static int checkButtonHovering = -1;
 static float textureScroll;
 
@@ -21,12 +21,16 @@ static Rectangle menuButton[3] = {
 void InitDifficultyScreen()
 {
     // Best to preset static variables.
-    checkButtonHovering = -1;
     finishExitCode = -1;
+
     textureScroll = 0.0f;
+    checkButtonHovering = -1;
+
     screenTexture = LoadRenderTexture(GetScreenWidth(), GetScreenHeight());
     menuBackground = LoadTexture("resources/menu_background.png");
     buttonClickSound = LoadSound("resources/button_click.wav");
+    gameStartSound = LoadSound("resources/game_start.wav");
+
 }
 
 void UpdateDifficultyScreen()
@@ -40,12 +44,12 @@ void UpdateDifficultyScreen()
     checkButtonHovering = checkButton(menuButton);
     if (checkButtonHovering == 0 && IsMouseButtonPressed(0))
     {
-        PlaySound(buttonClickSound);
+        PlaySound(gameStartSound);
         finishExitCode = 1;
     }
     else if (checkButtonHovering == 1 && IsMouseButtonPressed(0))
     {
-        PlaySound(buttonClickSound);
+        PlaySound(gameStartSound);
         finishExitCode = 2;
     }
     else if (checkButtonHovering == 2 && IsMouseButtonPressed(0))
@@ -82,7 +86,6 @@ void UnloadDifficultyScreen()
 {
     UnloadRenderTexture(screenTexture);
     UnloadTexture(menuBackground);
-    UnloadSound(buttonClickSound);
 }
 
 /// @brief 

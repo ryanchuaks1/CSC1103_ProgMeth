@@ -1,6 +1,7 @@
 #include "../include/screens.h"
 #include "../include/raylib.h"
 #include "../include/helpers.h"
+#include <stdio.h>
 
 // Static doesn't matter in this instances because we have an initialised function for each screens.
 static RenderTexture2D screenTexture;
@@ -29,9 +30,8 @@ void InitMainMenuScreen()
 
     screenTexture = LoadRenderTexture(800, 800);
     menuBackground = LoadTexture("resources/menu_background.png");
-
     buttonClickSound = LoadSound("resources/button_click.wav");
-    gameStartSound = LoadSound("resources/button_click.wav");
+    gameStartSound = LoadSound("resources/game_start.wav");
 }
 
 void UpdateMainMenuScreen()
@@ -91,6 +91,8 @@ void DrawMainMenuScreen()
 
 void UnloadMainMenuScreen()
 {
+    UnloadRenderTexture(screenTexture);
+    UnloadTexture(menuBackground);
 }
 
 /// @brief Returns an exit code which indicates which screen to goto next.

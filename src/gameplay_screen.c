@@ -85,7 +85,7 @@ void UpdateGameplayScreen()
     struct Move uselessMove = checkCollisionWithBoard();
     if (canMakeMove(board, uselessMove))
     {
-        printf("Can make move on [%d][%d]\n", uselessMove.column, uselessMove.row);
+        // printf("Can make move on [%d][%d]\n", uselessMove.column, uselessMove.row);
     }
 
     // It's within while loop so the bottom part probably doesn't work
