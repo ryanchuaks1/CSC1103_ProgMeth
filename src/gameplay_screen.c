@@ -14,21 +14,25 @@ char board[3][3] = {
     {'3', '4', '5'},
     {'6', '7', '8'},
 };
+int playerTurn = 0;
+static Texture2D gameBackground;
 RenderTexture2D screenTexture;
 RenderTexture2D XTextures;
 RenderTexture2D OTextures;
+struct Move hoveredMove;
 ///////////////////////////////
 
 ////// Functions Prototype ////////
 static void CreateCrossTexture(RenderTexture2D texture);
 static void CreateCircleTexture(RenderTexture2D texture);
-
+static struct Move getMoveOnHoveredBoard();
 
 void InitGameplayScreen(enum GameplayMode selectedMode)
 {
     gameMode = selectedMode;
 
     screenTexture = LoadRenderTexture(GetScreenWidth(), GetScreenHeight());
+    gameBackground = LoadTexture("resources/game_background.png");
     XTextures = LoadRenderTexture(gridSize, gridSize);
     OTextures = LoadRenderTexture(gridSize, gridSize);
 
@@ -40,8 +44,8 @@ static void CreateCrossTexture(RenderTexture2D texture)
 {
     BeginTextureMode(texture);
     ClearBackground(WHITE);
-	DrawRectanglePro((Rectangle){35, 13, gridSize - 5, 25}, (Vector2){0, 0}, 45.0f, RED);
-	DrawRectanglePro((Rectangle){135, 30, gridSize - 5, 25}, (Vector2){0, 0}, 135.0f, RED);
+    DrawRectanglePro((Rectangle){35, 13, gridSize - 5, 25}, (Vector2){0, 0}, 45.0f, RED);
+    DrawRectanglePro((Rectangle){135, 30, gridSize - 5, 25}, (Vector2){0, 0}, 135.0f, RED);
     EndTextureMode();
 }
 
@@ -50,87 +54,78 @@ static void CreateCircleTexture(RenderTexture2D texture)
     BeginTextureMode(texture);
     ClearBackground(WHITE);
     DrawCircle(gridSize / 2, gridSize / 2, gridSize / 2 - 5, BLUE); // Outer circle
-	DrawCircle(gridSize / 2, gridSize / 2, 45, WHITE);		
+    DrawCircle(gridSize / 2, gridSize / 2, 45, WHITE);
     EndTextureMode();
 }
 
-/// @brief Return a Move structure upon hovering on the board.
-static struct Move checkCollisionWithBoard()
-{
-    struct Move getHoveredMove;
-    Vector2 gridVectors = {155, 155};
-    for (int rows = 0; rows < 3; rows++)
-    {
-        for (int cols = 0; cols < 3; cols++)
-        {
-            // Check if the dimension has collided with the box
-            if (CheckCollisionPointRec(GetMousePosition(), (Rectangle){rows * (gridSize + gridThickness) + gridVectors.x, cols * (gridSize + gridThickness) + gridVectors.y, gridSize, gridSize}))
-            {
-                getHoveredMove.row = rows;
-                getHoveredMove.column = cols;
-            }
-            else
-            {
-                getHoveredMove.row = -1;
-                getHoveredMove.column = -1;
-            }
-        }
-    }
-    return getHoveredMove;
-}
-
-
 void UpdateGameplayScreen()
 {
-    struct Move uselessMove = checkCollisionWithBoard();
-    if (canMakeMove(board, uselessMove))
-    {
-        // printf("Can make move on [%d][%d]\n", uselessMove.column, uselessMove.row);
-    }
-
-    // It's within while loop so the bottom part probably doesn't work
-    int playerTurn = 0;
+    hoveredMove = getMoveOnHoveredBoard();
+    char playerSymbol = generatePlayerChar(playerTurn);
     if (gameMode == Multiplayer)
     {
-        char playerChar = generatePlayerChar(playerTurn);
-        // Some function to get mouse hovered and get the moveHovered
-        struct Move mouseHoveredMove;
-        if (canMakeMove(board, mouseHoveredMove) && IsMouseButtonPressed(0))
+        if (canMakeMove(board, hoveredMove) && IsMouseButtonPressed(0))
         {
-            makeMove(board, mouseHoveredMove, playerChar);
+            printf("%d\n", playerTurn);
+            makeMove(board, hoveredMove, playerSymbol);
             playerTurn = !playerTurn;
         }
     }
     else if (gameMode == MediumAI)
     {
-        // Wait for Sean
     }
-    else if (gameMode == ImpossibleAIMode)
+    else if (gameMode == ImpossibleAI)
     {
-        // First step always belong to the user
         if (playerTurn == 0)
         {
-            char playerChar = generatePlayerChar(playerTurn);
-            // Some function to get mouse hovered and get the moveHovered
-            struct Move mouseHoveredMove;
-            if (canMakeMove(board, mouseHoveredMove) && IsMouseButtonPressed(0))
+            if (canMakeMove(board, hoveredMove) && IsMouseButtonPressed(0))
             {
-                makeMove(board, mouseHoveredMove, playerChar);
+                makeMove(board, hoveredMove, playerSymbol);
                 playerTurn = !playerTurn;
             }
         }
         else
         {
-            char playerChar = generatePlayerChar(playerTurn);
+            // AI Mode
             struct Move bestMove = getBestMove(board);
-            // By right we don't need this because internally canMakeMove already has the check
-            if (canMakeMove(board, bestMove))
+            printf("Best Move determined is [%d][%d]\n", bestMove.row, bestMove.column);
+            makeMove(board, bestMove, playerSymbol);
+            playerTurn = !playerTurn;
+        }
+    }
+
+    // Variable that checks for texture so that the background can scroll
+    textureScroll -= 0.5f;
+    if (textureScroll <= -gameBackground.width * 2)
+    {
+        textureScroll = 0;
+    }
+}
+
+struct Move getMoveOnHoveredBoard()
+{
+    // Sets a default out of bound error
+    struct Move getHoveredMove = {-1, -1};
+    for (int rows = 0; rows < 3; rows++)
+    {
+        for (int cols = 0; cols < 3; cols++)
+        {
+            // Check whether mouse has collided with the grid.
+            // Does some calculation to check whether it has hit the grid thickness too.
+            Rectangle gridRectangle = {
+                (rows * (gridSize + gridThickness) + 155),
+                (cols * (gridSize + gridThickness) + 155),
+                gridSize,
+                gridSize};
+            if (CheckCollisionPointRec(GetMousePosition(), gridRectangle))
             {
-                makeMove(board, bestMove, playerChar);
+                getHoveredMove.row = rows;
+                getHoveredMove.column = cols;
+                return getHoveredMove;
             }
         }
     }
-    // Winner check below
+    return getHoveredMove;
 }
 
 void DrawGameplayScreen()
@@ -139,28 +134,24 @@ void DrawGameplayScreen()
     BeginTextureMode(screenTexture);
 
     ClearBackground(WHITE);
-
+    DrawTextureEx(gameBackground, (Vector2){textureScroll, 0}, 0.0f, 2.0f, WHITE);
+    DrawTextureEx(gameBackground, (Vector2){gameBackground.width * 2 + textureScroll, 0}, 0.0f, 2.0f, WHITE);
     // Draw a big square which is the background for the board
     DrawRectangle(145, 145, (gridSize * 3 + gridThickness * 2) + 20, (gridSize * 3 + gridThickness * 2) + 20, BLACK);
     // Draw empty boxes on the grid
     for (int rows = 0; rows < 3; rows++)
     {
-        for (int cols = 0; cols <3; cols++)
+        for (int cols = 0; cols < 3; cols++)
         {
             // Check and print in values that are already occupied by X and O and draw textures out.
-            if (board[rows][cols] == 'X' || board[rows][cols] == 'O')
+            if (board[rows][cols] == X || board[rows][cols] == O)
             {
-                //Draw the texture and slot it into the slot
-                DrawTextureRec((board[rows][cols] == 'X') ? XTextures.texture : OTextures.texture, (Rectangle){0, 0, gridSize, -gridSize}, (Vector2){rows * (gridSize + gridThickness) + 155, cols * (gridSize + gridThickness) + 155}, WHITE);
+                // Draw the texture and slot it into the slot
+                DrawTextureRec((board[rows][cols] == X) ? XTextures.texture : OTextures.texture, (Rectangle){0, 0, gridSize, -gridSize}, (Vector2){rows * (gridSize + gridThickness) + 155, cols * (gridSize + gridThickness) + 155}, WHITE);
             }
             else
             {
-                //TODO: Add hover events
-				// if (CheckCollisionPointRec((Vector2){GetMouseX(), GetMouseY()}, (Rectangle){i * (gridSize + gridThickness) + 155, j * (gridSize + gridThickness) + 155, gridSize, gridSize}))
-				// {
-				// 	DrawRectangle(i * (gridSize + gridThickness) + 155, j * (gridSize + gridThickness) + 155, gridSize, gridSize, LIGHTGRAY);
-				// }
-                DrawRectangle(rows * (gridSize + gridThickness) + 155, cols * (gridSize + gridThickness) + 155, gridSize, gridSize, WHITE);
+                DrawRectangle(rows * (gridSize + gridThickness) + 155, cols * (gridSize + gridThickness) + 155, gridSize, gridSize, (hoveredMove.column == cols && hoveredMove.row == rows) ? LIGHTGRAY: WHITE);
             }
         }
     }
@@ -182,12 +173,10 @@ void DrawGameplayScreen()
     EndDrawing();
 }
 
-
 void UnloadGameplayScreen()
-{ 
+{
 }
 
 int FinishGameplayScreen()
 {
-
 }

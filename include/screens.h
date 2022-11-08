@@ -1,12 +1,13 @@
 #ifndef SCREENS_H
 #define SCREENS_H
 
+extern float textureScroll;
+
 // The most hacky solution is to include things like MultiplayerMode
 enum GameScreen {
     MainMenuScreen,
     DifficultyScreen,
     GameplayScreen,
-    // TODO : Remove those and think of a way to refactor it
     MultiplayerMode,
     NormalAIMode,
     ImpossibleAIMode,

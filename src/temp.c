@@ -2,7 +2,6 @@
 #include <time.h>
 
 #include "../include/raylib.h"
-#include "../headers/functions.h"
 
 int mouseCollide(Vector2 mousePos, Vector2 gridPos, int gridSize, int gridThickness);
 int checkButton(Rectangle buttons[3]);
@@ -418,12 +417,12 @@ int mouseCollide(Vector2 mousePos, Vector2 gridPos, int gridSize, int gridThickn
 	return -1;
 }
 
-/**
+/** ----------------------------------------------------------------------------------------------------
  * @brief Check which button the mouse is over
  * @param buttons
  *
  * @return which button is pressed 0, 1, 2 or -1 if not
- */
+ ---------------------------------------------------------------------------------------------------- */
 int checkButton(Rectangle buttons[3])
 {
 	Vector2 mousePos = GetMousePosition(); // Gets the current mouse position

@@ -9,7 +9,6 @@ static Texture2D menuBackground;
 static Sound buttonClickSound;
 static Sound gameStartSound;
 static int checkButtonHovering = -1;
-static float textureScroll;
 
 // TODO : Remove 1 of them as we only have 2 buttons
 static Rectangle menuButton[3] = {
@@ -23,7 +22,6 @@ void InitDifficultyScreen()
     // Best to preset static variables.
     finishExitCode = -1;
 
-    textureScroll = 0.0f;
     checkButtonHovering = -1;
 
     screenTexture = LoadRenderTexture(GetScreenWidth(), GetScreenHeight());
