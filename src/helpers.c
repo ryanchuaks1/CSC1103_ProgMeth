@@ -12,7 +12,6 @@ void navigate(enum GameScreen nextScreen)
         case GameplayScreen: UnloadGameplayScreen(); break;
         default: break;
     }
-
     // Load respective initialising for next screen
     switch (nextScreen)
     {

@@ -47,6 +47,7 @@ int main(void)
         default: break;
     }
     UnloadSound(backgroundMusic);
+    CloseAudioDevice();
     return 0;
 }
 

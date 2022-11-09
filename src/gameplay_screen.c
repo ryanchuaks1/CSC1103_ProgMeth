@@ -179,5 +179,4 @@ void UnloadGameplayScreen()
     UnloadTexture(gameBackground);
     UnloadRenderTexture(XTextures);
     UnloadRenderTexture(OTextures);
-
 }
