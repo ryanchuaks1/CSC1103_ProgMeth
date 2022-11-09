@@ -1,39 +1,45 @@
 #include "../include/helpers.h"
 #include "../include/tic-tac-toe.h"
+#include "../include/screens.h"
 
-int mouseCollide(Vector2 mousePos, Vector2 gridPos, int gridSize, int gridThickness)
+void navigate(enum GameScreen nextScreen)
 {
-	for (int i = 0; i < 3; i++)
-	{
-		for (int j = 0; j < 3; j++)
-		{
-			if (CheckCollisionPointRec(mousePos, (Rectangle){i * (gridSize + gridThickness) + gridPos.x, j * (gridSize + gridThickness) + gridPos.y, gridSize, gridSize}))
-			{
-				return j * 3 + i;
-			}
-		}
-	}
-	return -1;
+    // Unload existing screen to prevent any possible segmentation failure
+    switch (currentScreen)
+    {
+        case MainMenuScreen: UnloadMainMenuScreen(); break;
+        case DifficultyScreen: UnloadDifficultyScreen(); break;
+        case GameplayScreen: UnloadGameplayScreen(); break;
+        default: break;
+    }
+
+    // Load respective initialising for next screen
+    switch (nextScreen)
+    {
+        case MainMenuScreen:
+            InitMainMenuScreen(); 
+            currentScreen = nextScreen; 
+            break;
+        case DifficultyScreen:
+            InitDifficultyScreen(); 
+            currentScreen = nextScreen; 
+            break;
+        case MultiplayerMode: 
+            InitGameplayScreen(Multiplayer); 
+            currentScreen = GameplayScreen; 
+            break;
+        case NormalAIMode: 
+            InitGameplayScreen(MediumAI); 
+            currentScreen = GameplayScreen; 
+            break; 
+        case ImpossibleAIMode: 
+            InitGameplayScreen(ImpossibleAI); 
+            currentScreen = GameplayScreen; 
+            break;
+        default : break;
+    }
 }
 
-//TODO : Move this out of helpers.c probably doesn't belong here.
-//TODO : Probably wasting memory space creating and deleting the struct oftenly. 
-struct Move getMouseCollisionOnGrid(Vector2 mousePos, Vector2 gridPos, int gridSize, int gridThickness)
-{
-	for (int rows = 0; rows < 3; rows++)
-	{
-		for (int cols = 0; cols < 3; cols++)
-		{
-			if (CheckCollisionPointRec(mousePos, (Rectangle){rows * (gridSize + gridThickness) + gridPos.x, cols * (gridSize + gridThickness) + gridPos.y, gridSize, gridSize}))
-			{
-				struct Move attemptedMove = { rows, cols};
-				return attemptedMove;
-			}
-		}
-	}
-}
-
-// TODO: Swap the input type to an array
 int checkButton(Rectangle buttons[3])
 {
 	Vector2 mousePos = GetMousePosition(); // Gets the current mouse position

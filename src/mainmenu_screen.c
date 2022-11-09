@@ -15,8 +15,6 @@ static Sound gameStartSound;
 static int framesCounter;
 static int checkButtonHovering;
 
-static int finishExitCode = -1;
-
 static Rectangle menuButton[3] = {
     (Rectangle){250, 260, 300, 100}, // Multiplayer
     (Rectangle){250, 380, 300, 100}, // VS AI
@@ -24,14 +22,12 @@ static Rectangle menuButton[3] = {
 };
 
 /** ----------------------------------------------------------------------------------------------------
- * @brief Initiate the Main Menu Screen, runs only once when navigating to the screen from main.c
+ * @brief Initiate the Main Menu Screen, runs only once when navigating to the screen
  *
  * @authors Ryan, Kang Le, Clarissa, Sean, Xavier
  ---------------------------------------------------------------------------------------------------- */
 void InitMainMenuScreen()
 {
-    finishExitCode = -1; // Sets the exit from main menu to -1 (default case in main.c)
-
     framesCounter = 0;        // Sets the frame counter to 0 (This is used for animating text)
     checkButtonHovering = -1; // Sets the default button hover to -1 which is nothing/default
 
@@ -53,16 +49,17 @@ void UpdateMainMenuScreen()
     if ((checkButtonHovering == 0) && IsMouseButtonPressed(0)) // Checks if button is hovered on and mouse is clicked
     {
         PlaySound(gameStartSound); // Play game start sound
-        finishExitCode = 1;        // Return exit code 1, "Multiplayer mode" in main.c
+        navigate(MultiplayerMode);
     }
     else if ((checkButtonHovering == 1) && IsMouseButtonPressed(0)) // Checks if button is hovered on and mouse is clicked
     {
         PlaySound(buttonClickSound); // Play button click sound
-        finishExitCode = 2;          // Return exit code 1, "Difficulty screen" in main.c
+        navigate(DifficultyScreen);
     }
     else if ((checkButtonHovering == 2) && IsMouseButtonPressed(0)) // Checks if button is hovered on and mouse is clicked
     {
-        finishExitCode = 3; // Return exit code 1, "close window" in main.c
+        UnloadMainMenuScreen();
+        CloseWindow(); // Return exit code 1, "close window" in main.c
     }
 
     textureScroll -= 0.5f;                          // -0.5 pixels in position to the background texture
@@ -110,11 +107,4 @@ void UnloadMainMenuScreen()
 {
     UnloadRenderTexture(screenTexture);
     UnloadTexture(menuBackground);
-}
-
-/// @brief Returns an exit code which indicates which screen to goto next.
-/// @return 1 = Multiplayer, 2 = VS AI (Redirects to DifficultyScreenMode)
-int FinishMainMenuScreen()
-{
-    return finishExitCode;
 }

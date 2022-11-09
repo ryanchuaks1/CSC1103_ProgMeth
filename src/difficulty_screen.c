@@ -3,7 +3,6 @@
 #include "../include/helpers.h"
 #include <stdio.h>
 
-static int finishExitCode = -1;
 static RenderTexture2D screenTexture;
 static Texture2D menuBackground;
 static Sound buttonClickSound;
@@ -19,9 +18,6 @@ static Rectangle menuButton[3] = {
 
 void InitDifficultyScreen()
 {
-    // Best to preset static variables.
-    finishExitCode = -1;
-
     checkButtonHovering = -1;
 
     screenTexture = LoadRenderTexture(GetScreenWidth(), GetScreenHeight());
@@ -39,20 +35,20 @@ void UpdateDifficultyScreen()
     }
 
     checkButtonHovering = checkButton(menuButton);
-        if (checkButtonHovering == 0 && IsMouseButtonPressed(0))
-        {
-            PlaySound(gameStartSound);
-            finishExitCode = 1;
-        }
+    if (checkButtonHovering == 0 && IsMouseButtonPressed(0))
+    {
+        PlaySound(gameStartSound);
+        navigate(NormalAIMode);
+    }
     else if (checkButtonHovering == 1 && IsMouseButtonPressed(0))
     {
         PlaySound(gameStartSound);
-        finishExitCode = 2;
+        navigate(ImpossibleAIMode);
     }
     else if (checkButtonHovering == 2 && IsMouseButtonPressed(0))
     {
         PlaySound(buttonClickSound);
-        finishExitCode = 3;
+        navigate(MainMenuScreen);
     }
 }
 
@@ -83,11 +79,4 @@ void UnloadDifficultyScreen()
 {
     UnloadRenderTexture(screenTexture);
     UnloadTexture(menuBackground);
-}
-
-/// @brief
-/// @return (1 = Mediu AI), (2 = Impossible AI), (3 = Back to Main Menu)
-int FinishDifficultyScreen()
-{
-    return finishExitCode;
 }
