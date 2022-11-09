@@ -175,8 +175,9 @@ void DrawGameplayScreen()
 
 void UnloadGameplayScreen()
 {
-}
+    UnloadRenderTexture(screenTexture);
+    UnloadTexture(gameBackground);
+    UnloadRenderTexture(XTextures);
+    UnloadRenderTexture(OTextures);
 
-int FinishGameplayScreen()
-{
 }

@@ -43,8 +43,10 @@ int main(void)
     {
         case 1: UnloadMainMenuScreen(); break;
         case 2: UnloadDifficultyScreen(); break;
+        case 3: UnloadGameplayScreen(); break;
         default: break;
     }
+    UnloadSound(backgroundMusic);
     return 0;
 }
 

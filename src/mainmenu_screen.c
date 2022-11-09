@@ -107,4 +107,6 @@ void UnloadMainMenuScreen()
 {
     UnloadRenderTexture(screenTexture);
     UnloadTexture(menuBackground);
+    UnloadSound(buttonClickSound);
+    UnloadSound(gameStartSound);
 }

@@ -1,0 +1,8 @@
+main.exe
+src/main.c
+objects/difficulty_screen.o
+objects/gameplay_screen.o
+objects/helpers.o
+objects/main.o
+objects/mainmenu_screen.o
+objects/tic-tac-toe.o

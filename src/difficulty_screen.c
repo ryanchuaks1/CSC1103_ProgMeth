@@ -79,4 +79,6 @@ void UnloadDifficultyScreen()
 {
     UnloadRenderTexture(screenTexture);
     UnloadTexture(menuBackground);
+    UnloadSound(buttonClickSound);
+    UnloadSound(gameStartSound);
 }
