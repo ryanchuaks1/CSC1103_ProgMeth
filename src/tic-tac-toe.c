@@ -27,16 +27,12 @@ bool hasAvailableSpot(char board[3][3])
         {
             struct Move attemptedMove = {rows, cols};
             if (canMakeMove(board, attemptedMove))
-            {
                 count++;
-            }
         }
     }
 
     if (count > 0)
-    {
         return true;
-    }
     return false;
 }
 
@@ -72,9 +68,7 @@ char checkWinner(char board[3][3])
 
     // There's no winner so we check if there's any empty space left yet.
     if (!hasAvailableSpot(board))
-    {
         return 'T';
-    }
     return -1;
 }
 
@@ -100,14 +94,9 @@ bool makeMove(char board[3][3], struct Move move, char moveSymbol)
 bool canMakeMove(char board[3][3], struct Move move)
 {
     if ((move.row > 3) || (move.column > 3))
-    {
         return false;
-    }
-
     if ((board[move.row][move.column] != X) && (board[move.row][move.column] != O))
-    {
         return true;
-    }
     return false;
 }
 
@@ -155,17 +144,11 @@ int minimax(char board[3][3], int depth, bool isMaximizing)
     // Remember that if we do not calculate how to get the results somewhere in this function,
     // Return bestScore would be unable to run as there is no one returning a value.
     char winResult = checkWinner(board);
-    if (winResult == X)
+    switch (winResult)
     {
-        return (10 - depth);
-    }
-    else if (winResult == O)
-    {
-        return (-10 + depth);
-    }
-    else if (winResult == T)
-    {
-        return 0;
+        case X: return (10 - depth);
+        case O: return (-10 + depth);
+        case T: return 0;
     }
 
     if (isMaximizing)

@@ -3,7 +3,6 @@
 
 extern float textureScroll;
 
-// The most hacky solution is to include things like MultiplayerMode
 enum GameScreen {
     MainMenuScreen,
     DifficultyScreen,

@@ -23,19 +23,19 @@ static void ChangeToScreen(enum GameScreen nextScreen);
  ---------------------------------------------------------------------------------------------------- */
 int main(void)
 {
-    InitWindow(800, 800, "Tic-Tac-Toe");    // Opens up a blank window 800 by 800 pixels
-    SetTargetFPS(60);                       // Sets the frames per second of the game
+    InitWindow(800, 800, "Tic-Tac-Toe"); // Opens up a blank window 800 by 800 pixels
+    SetTargetFPS(60);                    // Sets the frames per second of the game
 
-    InitAudioDevice();                                                          // Initiate the audio device
-    Sound backgroundMusic = LoadSound("resources/fall-music.wav");   // Loads the music from resources
-    SetSoundVolume(backgroundMusic, 0.5);                                       // Sets the volume of the bg music
-    PlaySound(backgroundMusic);                                           // Plays the background
+    InitAudioDevice();                                             // Initiate the audio device
+    Sound backgroundMusic = LoadSound("resources/fall-music.wav"); // Loads the music from resources
+    SetSoundVolume(backgroundMusic, 0.5);                          // Sets the volume of the bg music
+    PlaySound(backgroundMusic);                                    // Plays the background
 
-    currentScreen = MainMenuScreen;     // Set initial screen to MainMenuScreen();
-    InitMainMenuScreen();               // Initiate the main menu screen, Function is called in mainmenu_screen.c
-    while (!WindowShouldClose())        // Detect window close button or ESC key
+    currentScreen = MainMenuScreen; // Set initial screen to MainMenuScreen();
+    InitMainMenuScreen();           // Initiate the main menu screen, Function is called in mainmenu_screen.c
+    while (!WindowShouldClose())    // Detect window close button or ESC key
     {
-        UpdateDrawFrame();              // Generates the Screen, Function is called in main.c
+        UpdateDrawFrame(); // Generates the Screen, Function is called in main.c
     }
 
     // Call the respective Unload Function to destroy created data to prevent segmentation fault
@@ -62,19 +62,25 @@ static void UpdateDrawFrame(void)
     switch (currentScreen)
     {
         case MainMenuScreen:
-            UpdateMainMenuScreen();     //Loop to scroll the background and check for button hover/click
-            DrawMainMenuScreen();       //Loop to draw the frame
-            if (FinishMainMenuScreen() == 1) ChangeToScreen(MultiplayerMode);
-            else if (FinishMainMenuScreen() == 2) ChangeToScreen(DifficultyScreen);
-            else if (FinishMainMenuScreen() == 3) CloseWindow();
+            UpdateMainMenuScreen(); //Loop to scroll the background and check for button hover/click
+            DrawMainMenuScreen();   //Loop to draw the frame
+            switch(FinishMainMenuScreen())
+            {
+                case 1: ChangeToScreen(MultiplayerMode); break;
+                case 2: ChangeToScreen(DifficultyScreen); break;
+                case 3: CloseWindow(); break;
+            };
             break;
 
         case DifficultyScreen:
-            UpdateDifficultyScreen();   //Loop to scroll the background and check for button hover/clic
-            DrawDifficultyScreen();     //Loop to draw the frame
-            if (FinishDifficultyScreen() == 1) ChangeToScreen(NormalAIMode);
-            else if (FinishDifficultyScreen() == 2) ChangeToScreen(ImpossibleAIMode);
-            else if (FinishDifficultyScreen() == 3) ChangeToScreen(MainMenuScreen);
+            UpdateDifficultyScreen(); //Loop to scroll the background and check for button hover/clic
+            DrawDifficultyScreen();   //Loop to draw the frame
+            switch(FinishDifficultyScreen())
+            {
+                case 1: ChangeToScreen(NormalAIMode); break;
+                case 2: ChangeToScreen(ImpossibleAIMode); break;
+                case 3: ChangeToScreen(MainMenuScreen); break;
+            };
             break;
 
         case GameplayScreen:
@@ -107,11 +113,26 @@ static void ChangeToScreen(enum GameScreen nextScreen)
     // Load respective initialising for next screen
     switch (nextScreen)
     {
-        case MainMenuScreen: InitMainMenuScreen(); currentScreen = nextScreen; break;
-        case DifficultyScreen: InitDifficultyScreen(); currentScreen = nextScreen; break;
-        case MultiplayerMode: InitGameplayScreen(Multiplayer); currentScreen = GameplayScreen; break;
-        case NormalAIMode: InitGameplayScreen(MediumAI); currentScreen = GameplayScreen; break; 
-        case ImpossibleAIMode: InitGameplayScreen(ImpossibleAI); currentScreen = GameplayScreen; break;
+        case MainMenuScreen:
+            InitMainMenuScreen(); 
+            currentScreen = nextScreen; 
+            break;
+        case DifficultyScreen:
+            InitDifficultyScreen(); 
+            currentScreen = nextScreen; 
+            break;
+        case MultiplayerMode: 
+            InitGameplayScreen(Multiplayer); 
+            currentScreen = GameplayScreen; 
+            break;
+        case NormalAIMode: 
+            InitGameplayScreen(MediumAI); 
+            currentScreen = GameplayScreen; 
+            break; 
+        case ImpossibleAIMode: 
+            InitGameplayScreen(ImpossibleAI); 
+            currentScreen = GameplayScreen; 
+            break;
         default : break;
     }
 }
