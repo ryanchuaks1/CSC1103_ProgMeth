@@ -3,19 +3,26 @@
 #include "../include/helpers.h"
 #include <stdio.h>
 
+/** ----------------------------------------------------------------------------------------------------
+ * Global Static Variables
+ ---------------------------------------------------------------------------------------------------- */
+// Static doesn't matter in this instances because we have an initialised function for each screens.
 static RenderTexture2D screenTexture;
 static Texture2D menuBackground;
 static Sound buttonClickSound;
 static Sound gameStartSound;
 static int checkButtonHovering = -1;
 
-// TODO : Remove 1 of them as we only have 2 buttons
 static Rectangle menuButton[3] = {
     (Rectangle){250, 260, 300, 100}, // Medium AI
     (Rectangle){250, 380, 300, 100}, // Impossible AI
     (Rectangle){250, 500, 300, 100}  // Back to Home
 };
-
+/** ----------------------------------------------------------------------------------------------------
+ * @brief Initiate the Difficulty Screen, runs only once when navigating to the screen
+ *
+ * @authors Ryan, Kang Le, Clarissa, Sean, Xavier
+ ---------------------------------------------------------------------------------------------------- */
 void InitDifficultyScreen()
 {
     checkButtonHovering = -1;

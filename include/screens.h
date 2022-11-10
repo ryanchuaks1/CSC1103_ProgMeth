@@ -3,6 +3,7 @@
 
 extern float textureScroll;
 extern enum GameScreen currentScreen;
+extern struct Sound buttonClickSound;
 
 enum GameScreen {
     MainMenuScreen,

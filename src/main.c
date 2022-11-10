@@ -7,6 +7,7 @@
  ---------------------------------------------------------------------------------------------------- */
 enum GameScreen currentScreen;
 float textureScroll = 0.0f;
+struct Sound buttonClickSound;
 
 /** ----------------------------------------------------------------------------------------------------
  * Local functions prototype
@@ -27,11 +28,14 @@ int main(void)
 
     InitAudioDevice();                                             // Initiate the audio device
     Sound backgroundMusic = LoadSound("resources/fall-music.wav"); // Loads the music from resources
-    SetSoundVolume(backgroundMusic, 1);                          // Sets the volume of the bg music
+    buttonClickSound = LoadSound("resources/button_click.wav");    // Load button click sound
+    SetSoundVolume(backgroundMusic, 1);                            // Sets the volume of the bg music
+
     PlaySound(backgroundMusic);                                    // Plays the background
 
     currentScreen = MainMenuScreen; // Set initial screen to MainMenuScreen();
     InitMainMenuScreen();           // Initiate the main menu screen, Function is called in mainmenu_screen.c
+    
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
         UpdateFrame(); // Generates the Screen, Function is called in main.c
@@ -46,8 +50,9 @@ int main(void)
         case 3: UnloadGameplayScreen(); break;
         default: break;
     }
-    UnloadSound(backgroundMusic);
-    CloseAudioDevice();
+    UnloadSound(backgroundMusic);   // Unload the background music
+    CloseAudioDevice();             // Close audio device
+    CloseWindow();
     return 0;
 }
 
@@ -69,13 +74,13 @@ static void UpdateFrame(void)
             break;
 
         case DifficultyScreen:
-            UpdateDifficultyScreen(); //Loop to scroll the background and check for button hover/clic
+            UpdateDifficultyScreen(); //Loop to scroll the background and check for button hover/click
             DrawDifficultyScreen();   //Loop to draw the frame
             break;
 
         case GameplayScreen:
-            UpdateGameplayScreen();
-            DrawGameplayScreen();
+            UpdateGameplayScreen(); //Loop to scroll the background and check for grid hover/click
+            DrawGameplayScreen();   //Loop to draw the frame
             break;
         
         default: break;

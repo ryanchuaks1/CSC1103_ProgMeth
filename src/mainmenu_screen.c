@@ -4,14 +4,12 @@
 #include <stdio.h>
 
 /** ----------------------------------------------------------------------------------------------------
- * Local Variables
+ * Global Static Variables
  ---------------------------------------------------------------------------------------------------- */
 // Static doesn't matter in this instances because we have an initialised function for each screens.
 static RenderTexture2D screenTexture;
 static Texture2D menuBackground;
-static Sound buttonClickSound;
 static Sound gameStartSound;
-
 static int framesCounter;
 static int checkButtonHovering;
 
@@ -33,8 +31,8 @@ void InitMainMenuScreen()
 
     screenTexture = LoadRenderTexture(800, 800);                   // Load texture for rendering
     menuBackground = LoadTexture("resources/menu_background.png"); // Load background image
-    buttonClickSound = LoadSound("resources/button_click.wav");    // Load button click sound
-    gameStartSound = LoadSound("resources/game_start.wav");        // Load game start sound
+    // buttonClickSound = LoadSound("resources/button_click.wav");    // Load button click sound
+    gameStartSound = LoadSound("resources/game_start.wav"); // Load game start sound
 }
 
 /** ----------------------------------------------------------------------------------------------------
@@ -49,17 +47,17 @@ void UpdateMainMenuScreen()
     if ((checkButtonHovering == 0) && IsMouseButtonPressed(0)) // Checks if button is hovered on and mouse is clicked
     {
         PlaySound(gameStartSound); // Play game start sound
-        navigate(MultiplayerMode);
+        navigate(MultiplayerMode); // Navigate to Multiplayer mode and respective screen
     }
     else if ((checkButtonHovering == 1) && IsMouseButtonPressed(0)) // Checks if button is hovered on and mouse is clicked
     {
         PlaySound(buttonClickSound); // Play button click sound
-        navigate(DifficultyScreen);
+        navigate(DifficultyScreen);  // Navigate to select difficulty mode and respective screen
     }
     else if ((checkButtonHovering == 2) && IsMouseButtonPressed(0)) // Checks if button is hovered on and mouse is clicked
     {
-        UnloadMainMenuScreen();
-        CloseWindow(); // Return exit code 1, "close window" in main.c
+        UnloadMainMenuScreen(); // If the user hits exit, unload current screen
+        CloseWindow();          // Return exit code 1, "close window" in main.c
     }
 
     textureScroll -= 0.5f;                          // -0.5 pixels in position to the background texture
