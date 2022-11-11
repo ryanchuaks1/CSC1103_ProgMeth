@@ -9,7 +9,6 @@
 // Static doesn't matter in this instances because we have an initialised function for each screens.
 static RenderTexture2D screenTexture;
 static Texture2D menuBackground;
-static Sound buttonClickSound;
 static Sound gameStartSound;
 static int checkButtonHovering = -1;
 
@@ -29,7 +28,6 @@ void InitDifficultyScreen()
 
     screenTexture = LoadRenderTexture(GetScreenWidth(), GetScreenHeight());
     menuBackground = LoadTexture("resources/menu_background.png");
-    buttonClickSound = LoadSound("resources/button_click.wav");
     gameStartSound = LoadSound("resources/game_start.wav");
 }
 
