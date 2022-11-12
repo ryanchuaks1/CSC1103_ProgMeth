@@ -14,18 +14,22 @@ char board[3][3] = {
     {'3', '4', '5'},
     {'6', '7', '8'},
 };
-int playerTurn = 0;
+static int playerTurn = 0;
+static int winner = -1;
+
 static Texture2D gameBackground;
 RenderTexture2D screenTexture;
 RenderTexture2D XTextures;
 RenderTexture2D OTextures;
 struct Move hoveredMove;
+static int pressedButton = -1;
 ///////////////////////////////
 
 ////// Functions Prototype ////////
 static void CreateCrossTexture(RenderTexture2D texture);
 static void CreateCircleTexture(RenderTexture2D texture);
 static struct Move getMoveOnHoveredBoard();
+static void resetGrid(char board[3][3]);
 
 void InitGameplayScreen(enum GameplayMode selectedMode)
 {
@@ -35,6 +39,7 @@ void InitGameplayScreen(enum GameplayMode selectedMode)
     gameBackground = LoadTexture("resources/game_background.png");
     XTextures = LoadRenderTexture(gridSize, gridSize);
     OTextures = LoadRenderTexture(gridSize, gridSize);
+    pressedButton = -1;
 
     CreateCrossTexture(XTextures);
     CreateCircleTexture(OTextures);
@@ -58,42 +63,68 @@ static void CreateCircleTexture(RenderTexture2D texture)
     EndTextureMode();
 }
 
+static void resetGrid(char board[3][3])
+{
+    for (int rows = 0; rows < 3; rows++)
+    {
+        for (int cols = 0; cols < 3; cols++)
+        {
+            board[rows][cols] = rows + cols;
+        }
+    }
+}
+
 void UpdateGameplayScreen()
 {
     hoveredMove = getMoveOnHoveredBoard();
     char playerSymbol = generatePlayerChar(playerTurn);
-    if (gameMode == Multiplayer)
+    winner = checkWinner(board);
+
+    // Check if Home button is hovered
+    if (CheckCollisionPointRec(GetMousePosition(), (Rectangle){25, 15, 115, 105}))
     {
-        if (canMakeMove(board, hoveredMove) && IsMouseButtonPressed(0))
-        {
-            printf("%d\n", playerTurn);
-            makeMove(board, hoveredMove, playerSymbol);
-            playerTurn = !playerTurn;
-        }
+        pressedButton = 1;
     }
-    else if (gameMode == MediumAI)
+    if (IsMouseButtonPressed(0) && pressedButton == 1)
     {
+        navigate(MainMenuScreen);
+        // Either reset variables here or we reset in unload button
     }
-    else if (gameMode == ImpossibleAI)
+
+    if (winner == -1)
     {
-        if (playerTurn == 0)
+        if (gameMode == Multiplayer)
         {
             if (canMakeMove(board, hoveredMove) && IsMouseButtonPressed(0))
             {
+                printf("%d\n", playerTurn);
                 makeMove(board, hoveredMove, playerSymbol);
                 playerTurn = !playerTurn;
             }
         }
-        else
+        else if (gameMode == MediumAI)
         {
-            // AI Mode
-            struct Move bestMove = getBestMove(board);
-            printf("Best Move determined is [%d][%d]\n", bestMove.row, bestMove.column);
-            makeMove(board, bestMove, playerSymbol);
-            playerTurn = !playerTurn;
+        }
+        else if (gameMode == ImpossibleAI)
+        {
+            if (playerTurn == 0)
+            {
+                if (canMakeMove(board, hoveredMove) && IsMouseButtonPressed(0))
+                {
+                    makeMove(board, hoveredMove, playerSymbol);
+                    playerTurn = !playerTurn;
+                }
+            }
+            else
+            {
+                // AI Mode
+                struct Move bestMove = getBestMove(board);
+                printf("Best Move determined is [%d][%d]\n", bestMove.row, bestMove.column);
+                makeMove(board, bestMove, playerSymbol);
+                playerTurn = !playerTurn;
+            }
         }
     }
-
     // Variable that checks for texture so that the background can scroll
     textureScroll -= 0.5f;
     if (textureScroll <= -gameBackground.width * 2)
@@ -151,7 +182,7 @@ void DrawGameplayScreen()
             }
             else
             {
-                DrawRectangle(rows * (gridSize + gridThickness) + 155, cols * (gridSize + gridThickness) + 155, gridSize, gridSize, (hoveredMove.column == cols && hoveredMove.row == rows) ? LIGHTGRAY: WHITE);
+                DrawRectangle(rows * (gridSize + gridThickness) + 155, cols * (gridSize + gridThickness) + 155, gridSize, gridSize, (hoveredMove.column == cols && hoveredMove.row == rows) ? LIGHTGRAY : WHITE);
             }
         }
     }
@@ -170,6 +201,11 @@ void DrawGameplayScreen()
 
     EndTextureMode();
     DrawTextureRec(screenTexture.texture, (Rectangle){0, 0, 800, -800}, (Vector2){0, 0}, WHITE);
+
+    // Home button
+    DrawRectangleRounded((Rectangle){45, 45, 75, 75}, 0.2, 5, (pressedButton == 1) ? BLACK : GRAY);
+    DrawTriangle((Vector2){25, 55}, (Vector2){140, 55}, (Vector2){82.5, 15}, (pressedButton == 1) ? BLACK : GRAY);
+
     EndDrawing();
 }
 
@@ -179,4 +215,10 @@ void UnloadGameplayScreen()
     UnloadTexture(gameBackground);
     UnloadRenderTexture(XTextures);
     UnloadRenderTexture(OTextures);
+
+    // Reset static variables
+    pressedButton = -1;
+    winner = -1;
+    playerTurn = 0;
+    printf("%d \n\n\n", board[0][0]);
 }
