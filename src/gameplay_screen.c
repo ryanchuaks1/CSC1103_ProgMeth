@@ -9,7 +9,7 @@
 
 ////// Global Variables ////////
 enum GameplayMode gameMode;
-char board[3][3] = {
+char static board[3][3] = {
     {'0', '1', '2'},
     {'3', '4', '5'},
     {'6', '7', '8'},
@@ -39,7 +39,10 @@ void InitGameplayScreen(enum GameplayMode selectedMode)
     gameBackground = LoadTexture("resources/game_background.png");
     XTextures = LoadRenderTexture(gridSize, gridSize);
     OTextures = LoadRenderTexture(gridSize, gridSize);
+    
     pressedButton = -1;
+    winner = -1;
+    resetGrid(board);
 
     CreateCrossTexture(XTextures);
     CreateCircleTexture(OTextures);
@@ -65,19 +68,22 @@ static void CreateCircleTexture(RenderTexture2D texture)
 
 static void resetGrid(char board[3][3])
 {
-    for (int rows = 0; rows < 3; rows++)
-    {
-        for (int cols = 0; cols < 3; cols++)
-        {
-            board[rows][cols] = rows + cols;
-        }
-    }
+    board[0][0] = '0';
+    board[0][1] = '1';
+    board[0][2] = '2';
+    board[1][0] = '3';
+    board[1][1] = '4';
+    board[1][2] = '5';
+    board[2][0] = '6';
+    board[2][1] = '7';
+    board[2][2] = '8';
 }
 
 void UpdateGameplayScreen()
 {
     hoveredMove = getMoveOnHoveredBoard();
     char playerSymbol = generatePlayerChar(playerTurn);
+    //printf("Calling check winner %c\n", winner);
     winner = checkWinner(board);
 
     // Check if Home button is hovered
@@ -91,6 +97,7 @@ void UpdateGameplayScreen()
         // Either reset variables here or we reset in unload button
     }
 
+    //printf("%d \n", winner);
     if (winner == -1)
     {
         if (gameMode == Multiplayer)
@@ -215,10 +222,4 @@ void UnloadGameplayScreen()
     UnloadTexture(gameBackground);
     UnloadRenderTexture(XTextures);
     UnloadRenderTexture(OTextures);
-
-    // Reset static variables
-    pressedButton = -1;
-    winner = -1;
-    playerTurn = 0;
-    printf("%d \n\n\n", board[0][0]);
 }
