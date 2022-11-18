@@ -55,7 +55,6 @@ char checkWinner(char board[3][3])
             return board[0][i];
         }
     }
-
     // Check for diagonal winning condition
     if ((board[0][0] == board[1][1]) && (board[1][1] == board[2][2]))
     {
