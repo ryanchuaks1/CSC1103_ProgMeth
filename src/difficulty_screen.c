@@ -76,7 +76,6 @@ void DrawDifficultyScreen()
     BeginDrawing();
     BeginTextureMode(screenTexture);
 
-    ClearBackground(WHITE);
     DrawTextureEx(menuBackground, (Vector2){textureScroll, 0}, 0.0f, 2.0f, WHITE);
     DrawTextureEx(menuBackground, (Vector2){menuBackground.width * 2 + textureScroll, 0}, 0.0f, 2.0f, WHITE);
     DrawText("Select Difficulty", 85, 100, 75, BLACK);

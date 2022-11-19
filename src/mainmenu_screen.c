@@ -13,9 +13,9 @@ static int framesCounter;
 static int checkButtonHovering;
 
 static Rectangle menuButton[3] = {
-    (Rectangle){220, 260, 360, 100}, // Multiplayer
-    (Rectangle){220, 380, 360, 100}, // VS AI
-    (Rectangle){220, 500, 360, 100}  // Exit
+    (Rectangle){205, 260, 390, 100}, // Multiplayer
+    (Rectangle){205, 380, 390, 100}, // VS AI
+    (Rectangle){205, 500, 390, 100}  // Exit
 };
 
 /** ----------------------------------------------------------------------------------------------------
@@ -92,10 +92,16 @@ void DrawMainMenuScreen()
         // rectangle(already declared initially), roundness, segments, color
         DrawRectangleRounded(menuButton[i], 0.2, 5, (checkButtonHovering == i) ? (Color){226, 122, 61, 255} : (Color){90, 49, 24, 255}); // Border
         DrawRectangleRounded((Rectangle){menuButton[i].x + 10, menuButton[i].y + 10, 280, 80}, 0.2, 5, (Color){254, 215, 136, 255});     // Background
+        DrawRectangleRounded((Rectangle){505, menuButton[i].y + 10, 80, 80}, 0.2, 5, (Color){254, 215, 136, 255});                       // Background 2
     }
-    DrawText("Two Player", 275, 288, 45, (checkButtonHovering == 0) ? (Color){226, 122, 61, 255} : (Color){90, 49, 24, 255});
-    DrawText("Vs AI", 330, 408, 45, (checkButtonHovering == 1) ? (Color){226, 122, 61, 255} : (Color){90, 49, 24, 255});
-    DrawText("Exit", 360, 528, 45, (checkButtonHovering == 2) ? (Color){226, 122, 61, 255} : (Color){90, 49, 24, 255});
+    DrawText("Two Player", 230, 288, 45, (checkButtonHovering == 0) ? (Color){226, 122, 61, 255} : (Color){90, 49, 24, 255});
+    DrawText("2P", 520, 288, 45, (checkButtonHovering == 0) ? (Color){226, 122, 61, 255} : (Color){90, 49, 24, 255});
+
+    DrawText("Vs AI", 290, 408, 45, (checkButtonHovering == 1) ? (Color){226, 122, 61, 255} : (Color){90, 49, 24, 255});
+    DrawText("1P", 525, 408, 45, (checkButtonHovering == 1) ? (Color){226, 122, 61, 255} : (Color){90, 49, 24, 255});
+
+    DrawText("Exit", 320, 528, 45, (checkButtonHovering == 2) ? (Color){226, 122, 61, 255} : (Color){90, 49, 24, 255});
+    DrawText("X", 532, 528, 45, (checkButtonHovering == 2) ? (Color){226, 122, 61, 255} : (Color){90, 49, 24, 255});
 
     EndTextureMode(); // Ends drawing to render texture
     DrawTextureRec(screenTexture.texture, (Rectangle){0, 0, 800, -800}, (Vector2){0, 0}, WHITE);
