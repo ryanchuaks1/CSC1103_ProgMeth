@@ -97,7 +97,6 @@ void DrawDifficultyScreen()
 /** ----------------------------------------------------------------------------------------------------
  * @brief Unloads the difficulty Screen, runs only once when called from helpers.c
  *
- * @date mainmenu_screeb.c last updated 19/11/2022
  * @authors Ryan, Kang Le, Clarissa, Sean, Xavier
  ---------------------------------------------------------------------------------------------------- */
 void UnloadDifficultyScreen()
