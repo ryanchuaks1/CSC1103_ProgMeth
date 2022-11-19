@@ -1,14 +1,5 @@
 #include "../include/tic-tac-toe.h"
-
-void generateBoard(char board[3][3]);
-bool canMakeMove(char board[3][3], struct Move move);
-bool makeMove(char board[3][3], struct Move move, char moveSymbol);
-void copyBoard(char originalBoard[3][3], char duplicateBoard[3][3]);
-int minimax(char board[3][3], int depth, bool isMaximizing);
-char generatePlayerChar(int player);
-char checkWinner(char board[3][3]);
-bool hasAvailableSpot(char board[3][3]);
-
+#include "../include/helpers.h"
 
 char generatePlayerChar(int player)
 {
@@ -25,7 +16,7 @@ bool hasAvailableSpot(char board[3][3])
     {
         for (int cols = 0; cols < 3; cols++)
         {
-            struct Move attemptedMove = {rows, cols};
+            Move attemptedMove = {rows, cols};
             if (canMakeMove(board, attemptedMove))
                 count++;
         }
@@ -76,7 +67,7 @@ char checkWinner(char board[3][3])
 /// @param move
 /// @param moveSymbol
 /// @return Return true depending on whether it successfully modified the board
-bool makeMove(char board[3][3], struct Move move, char moveSymbol)
+bool makeMove(char board[3][3], Move move, char moveSymbol)
 {
     if (canMakeMove(board, move))
     {
@@ -90,7 +81,7 @@ bool makeMove(char board[3][3], struct Move move, char moveSymbol)
 /// @param board The board to check
 /// @param move A single structure consisting of row,column
 /// @return A boolean true/false whether you can place a move on a specific area on the board
-bool canMakeMove(char board[3][3], struct Move move)
+bool canMakeMove(char board[3][3], Move move)
 {
     if ((move.row > 3) || (move.column > 3))
         return false;
@@ -102,16 +93,22 @@ bool canMakeMove(char board[3][3], struct Move move)
 /// @brief Calls each available spot on the board and determine using minimax which is the next bestMove supposed to be
 /// @param board Given a board, what's the best next move to do next
 /// @return A structure which contains the best determined move to do next
-struct Move getBestMove(char board[3][3])
+Move getBestMove(char board[3][3], DifficultyMode mode)
 {
     int bestScore = -1000;
-    struct Move bestMove;
+    Move bestMove;
+    int alpha = -10000;
+    int beta = 10000;
+
+    if (mode == Easy)
+    {
+    }
 
     for (int rows = 0; rows < 3; rows++)
     {
         for (int cols = 0; cols < 3; cols++)
         {
-            struct Move attemptedMove = {rows, cols};
+            Move attemptedMove = {rows, cols};
             if (canMakeMove(board, attemptedMove))
             {
                 char duplicatedBoard[3][3];
@@ -119,7 +116,16 @@ struct Move getBestMove(char board[3][3])
 
                 // Attempt to put in the next possible move.
                 makeMove(duplicatedBoard, attemptedMove, X);
-                int tempScore = minimax(duplicatedBoard, 0, false);
+                int tempScore = 0;
+
+                if (mode == Medium)
+                {
+                    tempScore = minimax(duplicatedBoard, 0, alpha, beta, false, Medium);
+                }
+                else if (mode == Impossible)
+                {
+                    tempScore = minimax(duplicatedBoard, 0, alpha, beta, false, Impossible);
+                }
 
                 if (tempScore > bestScore)
                 {
@@ -138,16 +144,19 @@ struct Move getBestMove(char board[3][3])
 /// @param depth How deep has the recursion gone
 /// @param isMaximizing Checks which player turn. AI is usually maximizing. Player is usually minimizing.
 /// @return The
-int minimax(char board[3][3], int depth, bool isMaximizing)
+int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing, DifficultyMode mode)
 {
     // Remember that if we do not calculate how to get the results somewhere in this function,
     // Return bestScore would be unable to run as there is no one returning a value.
     char winResult = checkWinner(board);
     switch (winResult)
     {
-        case X: return (10 - depth);
-        case O: return (-10 + depth);
-        case T: return 0;
+    case X:
+        return (10 - depth);
+    case O:
+        return (-10 + depth);
+    case T:
+        return 0;
     }
 
     if (isMaximizing)
@@ -157,7 +166,7 @@ int minimax(char board[3][3], int depth, bool isMaximizing)
         {
             for (int cols = 0; cols < 3; cols++)
             {
-                struct Move attemptedMove = {rows, cols};
+                Move attemptedMove = {rows, cols};
                 if (canMakeMove(board, attemptedMove)) // Check for available spot in the board.
                 {
                     char duplicateBoard[3][3];
@@ -165,10 +174,16 @@ int minimax(char board[3][3], int depth, bool isMaximizing)
 
                     makeMove(duplicateBoard, attemptedMove, X);
                     // As long as the game doesn't end recursively call it till we get an end state.
-                    int score = minimax(duplicateBoard, depth++, false);
-                    if (bestScore < score)
+                    int score = minimax(duplicateBoard, depth++, alpha, beta, false, mode);
+                    int bestScore = max(bestScore, score);
+
+                    // Medium Mode will do alpha beta pruning
+                    if (mode == Medium)
                     {
-                        bestScore = score;
+                        if (beta <= alpha)
+                        {
+                            break;
+                        }
                     }
                 }
             }
@@ -182,7 +197,7 @@ int minimax(char board[3][3], int depth, bool isMaximizing)
         {
             for (int cols = 0; cols < 3; cols++)
             {
-                struct Move attemptedMove = {rows, cols};
+                Move attemptedMove = {rows, cols};
                 if (canMakeMove(board, attemptedMove))
                 {
                     char duplicateBoard[3][3];
@@ -190,11 +205,8 @@ int minimax(char board[3][3], int depth, bool isMaximizing)
 
                     makeMove(duplicateBoard, attemptedMove, O);
                     // As long as the game doesn't end recursively call it till we get an end state.
-                    int score = minimax(duplicateBoard, depth++, true);
-                    if (bestScore > score)
-                    {
-                        bestScore = score;
-                    }
+                    int score = minimax(duplicateBoard, depth++, alpha, beta, true, mode);
+                    int bestScore = min(bestScore, score);
                 }
             }
         }

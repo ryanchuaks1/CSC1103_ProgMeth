@@ -24,7 +24,7 @@ static Texture2D gameBackground;
 RenderTexture2D screenTexture;
 RenderTexture2D XTextures;
 RenderTexture2D OTextures;
-struct Move hoveredMove;
+Move hoveredMove;
 static int pressedButton = -1;
 
 /** ----------------------------------------------------------------------------------------------------
@@ -32,7 +32,7 @@ static int pressedButton = -1;
  ---------------------------------------------------------------------------------------------------- */
 static void CreateCrossTexture(RenderTexture2D texture);
 static void CreateCircleTexture(RenderTexture2D texture);
-static struct Move getMoveOnHoveredBoard();
+static Move getMoveOnHoveredBoard();
 static void resetGrid(char board[3][3]);
 
 
@@ -44,7 +44,7 @@ void InitGameplayScreen(enum GameplayMode selectedMode)
     gameBackground = LoadTexture("resources/game_background.png");
     XTextures = LoadRenderTexture(gridSize, gridSize);
     OTextures = LoadRenderTexture(gridSize, gridSize);
-    
+
     pressedButton = -1;
     winner = -1;
     resetGrid(board);
@@ -88,7 +88,7 @@ void UpdateGameplayScreen()
 {
     hoveredMove = getMoveOnHoveredBoard();
     char playerSymbol = generatePlayerChar(playerTurn);
-    //printf("Calling check winner %c\n", winner);
+    // printf("Calling check winner %c\n", winner);
     winner = checkWinner(board);
 
     // Check if Home button is hovered
@@ -102,7 +102,7 @@ void UpdateGameplayScreen()
         // Either reset variables here or we reset in unload button
     }
 
-    //printf("%d \n", winner);
+    // printf("%d \n", winner);
     if (winner == -1)
     {
         if (gameMode == Multiplayer)
@@ -116,6 +116,21 @@ void UpdateGameplayScreen()
         }
         else if (gameMode == MediumAI)
         {
+            if (playerTurn == 0)
+            {
+                if (canMakeMove(board, hoveredMove) && IsMouseButtonPressed(0))
+                {
+                    makeMove(board, hoveredMove, playerSymbol);
+                    playerTurn = !playerTurn;
+                }
+            }
+            else
+            {
+                Move bestMove = getBestMove(board, Medium);
+                // printf("Best Move determined is [%d][%d]\n", bestMove.row, bestMove.column);
+                makeMove(board, bestMove, playerSymbol);
+                playerTurn = !playerTurn;
+            }
         }
         else if (gameMode == ImpossibleAI)
         {
@@ -130,7 +145,7 @@ void UpdateGameplayScreen()
             else
             {
                 // AI Mode
-                struct Move bestMove = getBestMove(board);
+                Move bestMove = getBestMove(board, Impossible);
                 printf("Best Move determined is [%d][%d]\n", bestMove.row, bestMove.column);
                 makeMove(board, bestMove, playerSymbol);
                 playerTurn = !playerTurn;
@@ -145,10 +160,10 @@ void UpdateGameplayScreen()
     }
 }
 
-struct Move getMoveOnHoveredBoard()
+Move getMoveOnHoveredBoard()
 {
     // Sets a default out of bound error
-    struct Move getHoveredMove = {-1, -1};
+    Move getHoveredMove = {-1, -1};
     for (int rows = 0; rows < 3; rows++)
     {
         for (int cols = 0; cols < 3; cols++)

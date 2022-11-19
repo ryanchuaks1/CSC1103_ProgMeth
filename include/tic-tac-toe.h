@@ -7,17 +7,27 @@
 #define O 'O'
 #define T 'T'
 
-struct Move
+typedef struct Move
 {
     int row;
     int column;
 };
 
-bool canMakeMove(char board[3][3], struct Move move);
-bool makeMove(char board[3][3], struct Move move, char moveSymbol);
+typedef enum DifficultyMode
+{
+    Easy,
+    Medium,
+    Impossible,
+};
+
+typedef struct Move Move;
+typedef enum DifficultyMode DifficultyMode;
+
+bool canMakeMove(char board[3][3], Move move);
+bool makeMove(char board[3][3], Move move, char moveSymbol);
 void copyBoard(char originalBoard[3][3], char duplicateBoard[3][3]);
-struct Move getBestMove(char board[3][3]);
-int minimax(char board[3][3], int depth, bool isMaximizing);
+struct Move getBestMove(char board[3][3], DifficultyMode mode);
+int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing, DifficultyMode mode);
 char generatePlayerChar(int player);
 char checkWinner(char board[3][3]);
 bool hasAvailableSpot(char board[3][3]);
