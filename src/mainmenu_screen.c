@@ -6,22 +6,22 @@
 /** ----------------------------------------------------------------------------------------------------
  * Global Static Variables
  ---------------------------------------------------------------------------------------------------- */
-// Static doesn't matter in this instances because we have an initialised function for each screens.
+// Static keeps the variables local to this file.
 static RenderTexture2D screenTexture;
 static Texture2D menuBackground;
-static Sound gameStartSound;
 static int framesCounter;
 static int checkButtonHovering;
 
 static Rectangle menuButton[3] = {
-    (Rectangle){250, 260, 300, 100}, // Multiplayer
-    (Rectangle){250, 380, 300, 100}, // VS AI
-    (Rectangle){250, 500, 300, 100}  // Exit
+    (Rectangle){220, 260, 360, 100}, // Multiplayer
+    (Rectangle){220, 380, 360, 100}, // VS AI
+    (Rectangle){220, 500, 360, 100}  // Exit
 };
 
 /** ----------------------------------------------------------------------------------------------------
  * @brief Initiate the Main Menu Screen, runs only once when navigating to the screen
  *
+ * @date mainmenu_screeb.c last updated 19/11/2022
  * @authors Ryan, Kang Le, Clarissa, Sean, Xavier
  ---------------------------------------------------------------------------------------------------- */
 void InitMainMenuScreen()
@@ -31,12 +31,13 @@ void InitMainMenuScreen()
 
     screenTexture = LoadRenderTexture(800, 800);                   // Load texture for rendering
     menuBackground = LoadTexture("resources/menu_background.png"); // Load background image
-    // buttonClickSound = LoadSound("resources/button_click.wav");    // Load button click sound
-    gameStartSound = LoadSound("resources/game_start.wav"); // Load game start sound
 }
 
 /** ----------------------------------------------------------------------------------------------------
- * @brief Initiate the Main Menu Screen, runs only once when navigating to the screen from main.c
+ * @brief Updates the main menu screen screen parameters. This function runs about 60 times a second.
+ * This loop is created from main.c in the UpdateDrawFrame() function
+ * This function checks if a button is hovered using @param checkButtonHovering. This also checks
+ * if the user clicks on one of the buttons
  *
  * @authors Ryan, Kang Le, Clarissa, Sean, Xavier
  ---------------------------------------------------------------------------------------------------- */
@@ -69,9 +70,9 @@ void UpdateMainMenuScreen()
 }
 
 /** ----------------------------------------------------------------------------------------------------
- * @brief DrawMainMenuScreen is continuously looping while the programm is still running (window is not close)
+ * @brief Updates the main menu screen screen user interface. This function runs about 60 times a second.
  * This loop is created from main.c in the UpdateDrawFrame() function
- * Since FPS of program is set to 60 in main.c, this function loops about 60 times a second
+ * This function renders the next frame of the program and renders it into the screen.
  *
  * @authors Ryan, Kang Le, Clarissa, Sean, Xavier
  ---------------------------------------------------------------------------------------------------- */
@@ -96,13 +97,19 @@ void DrawMainMenuScreen()
     DrawText("Vs AI", 330, 408, 45, (checkButtonHovering == 1) ? (Color){226, 122, 61, 255} : (Color){90, 49, 24, 255});
     DrawText("Exit", 360, 528, 45, (checkButtonHovering == 2) ? (Color){226, 122, 61, 255} : (Color){90, 49, 24, 255});
 
-    EndTextureMode();
+    EndTextureMode(); // Ends drawing to render texture
     DrawTextureRec(screenTexture.texture, (Rectangle){0, 0, 800, -800}, (Vector2){0, 0}, WHITE);
-    EndDrawing();
+    EndDrawing(); // End canvas drawing
 }
 
+/** ----------------------------------------------------------------------------------------------------
+ * @brief Unloads the Main Menu Screen, runs only once when called from helpers.c
+ *
+ * @date mainmenu_screeb.c last updated 19/11/2022
+ * @authors Ryan, Kang Le, Clarissa, Sean, Xavier
+ ---------------------------------------------------------------------------------------------------- */
 void UnloadMainMenuScreen()
 {
-    UnloadRenderTexture(screenTexture);
-    UnloadTexture(menuBackground);
+    UnloadRenderTexture(screenTexture); // Unload render texture from GPU memory (VRAM)
+    UnloadTexture(menuBackground);      // Unload texture from GPU memory (VRAM)
 }

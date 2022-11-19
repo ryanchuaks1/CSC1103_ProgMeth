@@ -3,11 +3,12 @@
 #include <stdio.h>
 
 /** ----------------------------------------------------------------------------------------------------
- * Global Variables
+ * Global Variables (used across all screens)
  ---------------------------------------------------------------------------------------------------- */
 enum GameScreen currentScreen;
 float textureScroll = 0.0f;
 struct Sound buttonClickSound;
+struct Sound gameStartSound;
 
 /** ----------------------------------------------------------------------------------------------------
  * Local functions prototype
@@ -17,8 +18,9 @@ static void UpdateFrame(void);
 /** ----------------------------------------------------------------------------------------------------
  * @brief Main function of the program
  * This function starts the program with window and sound
- * The control of screens both loading and unloading is also controlled here
+ * The control of screens both loading and unloading is done here
  * 
+ * @date main.c last updated 19/11/2022
  * @authors Ryan, Kang Le, Clarissa, Sean, Xavier
  ---------------------------------------------------------------------------------------------------- */
 int main(void)
@@ -29,7 +31,8 @@ int main(void)
     InitAudioDevice();                                             // Initiate the audio device
     Sound backgroundMusic = LoadSound("resources/fall-music.wav"); // Loads the music from resources
     buttonClickSound = LoadSound("resources/button_click.wav");    // Load button click sound
-    SetSoundVolume(backgroundMusic, 1);                            // Sets the volume of the bg music
+    gameStartSound = LoadSound("resources/game_start.wav");      // Load game start sound
+    SetSoundVolume(backgroundMusic, 0.5);                          // Sets the volume of the bg music
 
     PlaySound(backgroundMusic);                                    // Plays the background
 
@@ -59,7 +62,6 @@ int main(void)
 /** ----------------------------------------------------------------------------------------------------
  * @brief UpdateDrawFrame is continuously looping while the programm is still running (window is not close)
  * This function checks what @param cuurrentScreen is and proceeds to Update and Draw that particular screen
- * If the screen returns a different exit code, it will run the function ChangeToScreen(*SCREEN*) 
  * Since FPS of program is set to 60, this function loops about 60 times a second
  * 
  * @authors Ryan, Kang Le, Clarissa, Sean, Xavier

@@ -6,11 +6,10 @@
 /** ----------------------------------------------------------------------------------------------------
  * Global Static Variables
  ---------------------------------------------------------------------------------------------------- */
-// Static doesn't matter in this instances because we have an initialised function for each screens.
+// Static keeps the variables local to this file.
 static RenderTexture2D screenTexture;
 static Texture2D menuBackground;
-static Sound gameStartSound;
-static int checkButtonHovering = -1;
+static int checkButtonHovering;
 
 static Rectangle menuButton[3] = {
     (Rectangle){250, 260, 300, 100}, // Medium AI
@@ -20,6 +19,7 @@ static Rectangle menuButton[3] = {
 /** ----------------------------------------------------------------------------------------------------
  * @brief Initiate the Difficulty Screen, runs only once when navigating to the screen
  *
+ * @date mainmenu_screeb.c last updated 19/11/2022
  * @authors Ryan, Kang Le, Clarissa, Sean, Xavier
  ---------------------------------------------------------------------------------------------------- */
 void InitDifficultyScreen()
@@ -28,9 +28,16 @@ void InitDifficultyScreen()
 
     screenTexture = LoadRenderTexture(GetScreenWidth(), GetScreenHeight());
     menuBackground = LoadTexture("resources/menu_background.png");
-    gameStartSound = LoadSound("resources/game_start.wav");
 }
 
+/** ----------------------------------------------------------------------------------------------------
+ * @brief Updates the difficulty screen parameters. This function runs about 60 times a second.
+ * This loop is created from main.c in the UpdateDrawFrame() function
+ * This function checks if a button is hovered using @param checkButtonHovering. This also checks
+ * if the user clicks on one of the buttons
+ *
+ * @authors Ryan, Kang Le, Clarissa, Sean, Xavier
+ ---------------------------------------------------------------------------------------------------- */
 void UpdateDifficultyScreen()
 {
     textureScroll -= 0.5f;
@@ -57,6 +64,13 @@ void UpdateDifficultyScreen()
     }
 }
 
+/** ----------------------------------------------------------------------------------------------------
+ * @brief Updates the difficulty screen user interface. This function runs about 60 times a second.
+ * This loop is created from main.c in the UpdateDrawFrame() function
+ * This function renders the next frame of the program and renders it into the screen.
+ *
+ * @authors Ryan, Kang Le, Clarissa, Sean, Xavier
+ ---------------------------------------------------------------------------------------------------- */
 void DrawDifficultyScreen()
 {
     BeginDrawing();
@@ -68,18 +82,25 @@ void DrawDifficultyScreen()
     DrawText("Select Difficulty", 85, 100, 75, BLACK);
     for (int i = 0; i < 3; i++)
     {
-        DrawRectangleRounded(menuButton[i], 0.2, 5, (checkButtonHovering == i) ? (Color){226, 122, 61, 255} : (Color){90, 49, 24, 255});
-        DrawRectangleRounded((Rectangle){menuButton[i].x + 10, menuButton[i].y + 10, 280, 80}, 0.2, 5, (Color){254, 215, 136, 255});
+        // rectangle(already declared initially), roundness, segments, color
+        DrawRectangleRounded(menuButton[i], 0.2, 5, (checkButtonHovering == i) ? (Color){226, 122, 61, 255} : (Color){90, 49, 24, 255}); // Border
+        DrawRectangleRounded((Rectangle){menuButton[i].x + 10, menuButton[i].y + 10, 280, 80}, 0.2, 5, (Color){254, 215, 136, 255});     // Background
     }
     DrawText("Medium", 330, 288, 45, (checkButtonHovering == 0) ? (Color){226, 122, 61, 255} : (Color){90, 49, 24, 255});
     DrawText("Impossible", 292, 408, 45, (checkButtonHovering == 1) ? (Color){226, 122, 61, 255} : (Color){90, 49, 24, 255});
     DrawText("Home", 350, 528, 45, (checkButtonHovering == 2) ? (Color){226, 122, 61, 255} : (Color){90, 49, 24, 255});
 
-    EndTextureMode();
-    DrawTextureRec(screenTexture.texture, (Rectangle){0, 0, GetScreenWidth(), -GetScreenHeight()}, (Vector2){0, 0}, WHITE);
-    EndDrawing();
+    EndTextureMode();                                                                                                       // Ends drawing to render texture
+    DrawTextureRec(screenTexture.texture, (Rectangle){0, 0, GetScreenWidth(), -GetScreenHeight()}, (Vector2){0, 0}, WHITE); // Draw the texture onto the canvas (screen)
+    EndDrawing();                                                                                                           // End canvas drawing
 }
 
+/** ----------------------------------------------------------------------------------------------------
+ * @brief Unloads the difficulty Screen, runs only once when called from helpers.c
+ *
+ * @date mainmenu_screeb.c last updated 19/11/2022
+ * @authors Ryan, Kang Le, Clarissa, Sean, Xavier
+ ---------------------------------------------------------------------------------------------------- */
 void UnloadDifficultyScreen()
 {
     UnloadRenderTexture(screenTexture);

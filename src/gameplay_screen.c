@@ -7,7 +7,10 @@
 #define gridSize 150
 #define gridThickness 10
 
-////// Global Variables ////////
+/** ----------------------------------------------------------------------------------------------------
+ * Global Static Variables
+ ---------------------------------------------------------------------------------------------------- */
+// Static keeps the variables local to this file.
 enum GameplayMode gameMode;
 char static board[3][3] = {
     {'0', '1', '2'},
@@ -23,13 +26,15 @@ RenderTexture2D XTextures;
 RenderTexture2D OTextures;
 struct Move hoveredMove;
 static int pressedButton = -1;
-///////////////////////////////
 
-////// Functions Prototype ////////
+/** ----------------------------------------------------------------------------------------------------
+ * Local functions prototype
+ ---------------------------------------------------------------------------------------------------- */
 static void CreateCrossTexture(RenderTexture2D texture);
 static void CreateCircleTexture(RenderTexture2D texture);
 static struct Move getMoveOnHoveredBoard();
 static void resetGrid(char board[3][3]);
+
 
 void InitGameplayScreen(enum GameplayMode selectedMode)
 {
