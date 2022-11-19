@@ -211,8 +211,8 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
                     int score = minimax(duplicateBoard, depth++, alpha, beta, true, mode);
                     if (mode == Medium)
                     {
-                        bestScore = max(bestScore / 7, score);
-                        alpha = max(alpha, bestScore);
+                        bestScore = min(bestScore / 7, score);
+                        alpha = min(alpha, bestScore);
                         if (beta <= alpha)
                         {
                             break;
