@@ -1,4 +1,5 @@
 #include "../include/tic-tac-toe.h"
+#include "../include/helpers.h"
 
 char generatePlayerChar(int player)
 {
@@ -94,12 +95,14 @@ bool canMakeMove(char board[3][3], Move move)
 /// @return A structure which contains the best determined move to do next
 Move getBestMove(char board[3][3], DifficultyMode mode)
 {
+    int bestScore = -1000;
+    Move bestMove;
+    int alpha = -10000;
+    int beta = 10000;
+
     if (mode == Easy)
     {
     }
-
-    int bestScore = -1000;
-    Move bestMove;
 
     for (int rows = 0; rows < 3; rows++)
     {
@@ -117,11 +120,11 @@ Move getBestMove(char board[3][3], DifficultyMode mode)
 
                 if (mode == Medium)
                 {
-                    tempScore = minimax(duplicatedBoard, 0, false);
+                    tempScore = minimax(duplicatedBoard, 0, alpha, beta, false, Medium);
                 }
                 else if (mode == Impossible)
                 {
-                    tempScore = minimax(duplicatedBoard, 0, false);
+                    tempScore = minimax(duplicatedBoard, 0, alpha, beta, false, Impossible);
                 }
 
                 if (tempScore > bestScore)
@@ -141,7 +144,7 @@ Move getBestMove(char board[3][3], DifficultyMode mode)
 /// @param depth How deep has the recursion gone
 /// @param isMaximizing Checks which player turn. AI is usually maximizing. Player is usually minimizing.
 /// @return The
-int minimax(char board[3][3], int depth, bool isMaximizing)
+int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing, DifficultyMode mode)
 {
     // Remember that if we do not calculate how to get the results somewhere in this function,
     // Return bestScore would be unable to run as there is no one returning a value.
@@ -171,10 +174,16 @@ int minimax(char board[3][3], int depth, bool isMaximizing)
 
                     makeMove(duplicateBoard, attemptedMove, X);
                     // As long as the game doesn't end recursively call it till we get an end state.
-                    int score = minimax(duplicateBoard, depth++, false);
-                    if (bestScore < score)
+                    int score = minimax(duplicateBoard, depth++, alpha, beta, false, mode);
+                    int bestScore = max(bestScore, score);
+
+                    // Medium Mode will do alpha beta pruning
+                    if (mode == Medium)
                     {
-                        bestScore = score;
+                        if (beta <= alpha)
+                        {
+                            break;
+                        }
                     }
                 }
             }
@@ -196,11 +205,8 @@ int minimax(char board[3][3], int depth, bool isMaximizing)
 
                     makeMove(duplicateBoard, attemptedMove, O);
                     // As long as the game doesn't end recursively call it till we get an end state.
-                    int score = minimax(duplicateBoard, depth++, true);
-                    if (bestScore > score)
-                    {
-                        bestScore = score;
-                    }
+                    int score = minimax(duplicateBoard, depth++, alpha, beta, true, mode);
+                    int bestScore = min(bestScore, score);
                 }
             }
         }
