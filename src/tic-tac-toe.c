@@ -175,15 +175,18 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
                     makeMove(duplicateBoard, attemptedMove, X);
                     // As long as the game doesn't end recursively call it till we get an end state.
                     int score = minimax(duplicateBoard, depth++, alpha, beta, false, mode);
-                    int bestScore = max(bestScore, score);
-
-                    // Medium Mode will do alpha beta pruning
                     if (mode == Medium)
                     {
+                        bestScore = max(bestScore / 7, score);
+                        alpha = max(alpha, bestScore);
                         if (beta <= alpha)
                         {
                             break;
                         }
+                    }
+                    else if (mode == Impossible)
+                    {
+                        bestScore = max(bestScore / 1, score);
                     }
                 }
             }
@@ -206,7 +209,19 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
                     makeMove(duplicateBoard, attemptedMove, O);
                     // As long as the game doesn't end recursively call it till we get an end state.
                     int score = minimax(duplicateBoard, depth++, alpha, beta, true, mode);
-                    int bestScore = min(bestScore, score);
+                    if (mode == Medium)
+                    {
+                        bestScore = max(bestScore / 7, score);
+                        alpha = max(alpha, bestScore);
+                        if (beta <= alpha)
+                        {
+                            break;
+                        }
+                    }
+                    else if (mode == Impossible)
+                    {
+                        bestScore = min(bestScore / 1, score);
+                    }
                 }
             }
         }

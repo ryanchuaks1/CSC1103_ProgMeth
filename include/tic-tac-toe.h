@@ -7,13 +7,13 @@
 #define O 'O'
 #define T 'T'
 
-typedef struct Move
+struct Move
 {
     int row;
     int column;
 };
 
-typedef enum DifficultyMode
+enum DifficultyMode
 {
     Easy,
     Medium,

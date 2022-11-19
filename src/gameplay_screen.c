@@ -35,7 +35,6 @@ static void CreateCircleTexture(RenderTexture2D texture);
 static Move getMoveOnHoveredBoard();
 static void resetGrid(char board[3][3]);
 
-
 void InitGameplayScreen(enum GameplayMode selectedMode)
 {
     gameMode = selectedMode;
@@ -45,6 +44,7 @@ void InitGameplayScreen(enum GameplayMode selectedMode)
     XTextures = LoadRenderTexture(gridSize, gridSize);
     OTextures = LoadRenderTexture(gridSize, gridSize);
 
+    playerTurn = 0;
     pressedButton = -1;
     winner = -1;
     resetGrid(board);
@@ -126,8 +126,7 @@ void UpdateGameplayScreen()
             }
             else
             {
-                Move bestMove = getBestMove(board, Medium);
-                // printf("Best Move determined is [%d][%d]\n", bestMove.row, bestMove.column);
+                Move bestMove = getBestMove(board, Impossible);
                 makeMove(board, bestMove, playerSymbol);
                 playerTurn = !playerTurn;
             }
