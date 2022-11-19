@@ -5,7 +5,8 @@ extern float textureScroll;
 extern enum GameScreen currentScreen;
 extern struct Sound buttonClickSound;
 
-enum GameScreen {
+enum GameScreen
+{
     MainMenuScreen,
     DifficultyScreen,
     GameplayScreen,
@@ -14,7 +15,9 @@ enum GameScreen {
     ImpossibleAIMode,
 };
 
-enum GameplayMode {
+// Potentially move this out as tic-tac-toe as an enum already
+enum GameplayMode
+{
     Multiplayer,
     MediumAI,
     ImpossibleAI,
