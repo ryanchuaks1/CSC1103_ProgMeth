@@ -89,12 +89,16 @@ void UpdateGameplayScreen()
     hoveredMove = getMoveOnHoveredBoard();
     char playerSymbol = generatePlayerChar(playerTurn);
     winner = checkWinner(board);
+    // printf("[%d][%d]\n", hoveredMove.column, hoveredMove.row);
+    Move bleh = {-1, -2};
+    printf("%d \n", canMakeMove(board, bleh));
 
     // Check if Home button is hovered
     if (CheckCollisionPointRec(GetMousePosition(), (Rectangle){25, 15, 115, 105}))
     {
         pressedButton = 1;
     }
+
     if (IsMouseButtonPressed(0) && pressedButton == 1)
     {
         navigate(MainMenuScreen);

@@ -85,6 +85,10 @@ bool canMakeMove(char board[3][3], Move move)
 {
     if ((move.row > 3) || (move.column > 3))
         return false;
+
+    if ((move.row < 0) || (move.column < 0))
+        return false;
+
     if ((board[move.row][move.column] != X) && (board[move.row][move.column] != O))
         return true;
     return false;
