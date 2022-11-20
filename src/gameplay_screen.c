@@ -126,7 +126,7 @@ void UpdateGameplayScreen()
             }
             else
             {
-                Move bestMove = getBestMove(board, Impossible);
+                Move bestMove = getBestMove(board, Medium);
                 makeMove(board, bestMove, playerSymbol);
                 playerTurn = !playerTurn;
             }
