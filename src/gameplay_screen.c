@@ -11,7 +11,7 @@
  * Global Static Variables
  ---------------------------------------------------------------------------------------------------- */
 // Static keeps the variables local to this file.
-enum GameplayMode gameMode;
+GameplayMode gameMode;
 char static board[3][3] = {
     {'0', '1', '2'},
     {'3', '4', '5'},
@@ -35,7 +35,7 @@ static void CreateCircleTexture(RenderTexture2D texture);
 static Move getMoveOnHoveredBoard();
 static void resetGrid(char board[3][3]);
 
-void InitGameplayScreen(enum GameplayMode selectedMode)
+void InitGameplayScreen(GameplayMode selectedMode)
 {
     gameMode = selectedMode;
 
@@ -88,7 +88,6 @@ void UpdateGameplayScreen()
 {
     hoveredMove = getMoveOnHoveredBoard();
     char playerSymbol = generatePlayerChar(playerTurn);
-    // printf("Calling check winner %c\n", winner);
     winner = checkWinner(board);
 
     // Check if Home button is hovered
@@ -99,10 +98,8 @@ void UpdateGameplayScreen()
     if (IsMouseButtonPressed(0) && pressedButton == 1)
     {
         navigate(MainMenuScreen);
-        // Either reset variables here or we reset in unload button
     }
 
-    // printf("%d \n", winner);
     if (winner == -1)
     {
         if (gameMode == Multiplayer)
@@ -145,7 +142,6 @@ void UpdateGameplayScreen()
             {
                 // AI Mode
                 Move bestMove = getBestMove(board, Impossible);
-                printf("Best Move determined is [%d][%d]\n", bestMove.row, bestMove.column);
                 makeMove(board, bestMove, playerSymbol);
                 playerTurn = !playerTurn;
             }

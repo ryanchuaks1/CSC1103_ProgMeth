@@ -7,21 +7,18 @@
 #define O 'O'
 #define T 'T'
 
-struct Move
+typedef struct Move
 {
     int row;
     int column;
-};
+} Move;
 
-enum DifficultyMode
+typedef enum DifficultyMode
 {
     Easy,
     Medium,
     Impossible,
 };
-
-typedef struct Move Move;
-typedef enum DifficultyMode DifficultyMode;
 
 bool canMakeMove(char board[3][3], Move move);
 bool makeMove(char board[3][3], Move move, char moveSymbol);

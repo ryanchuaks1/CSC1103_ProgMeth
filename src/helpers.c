@@ -2,7 +2,7 @@
 #include "../include/tic-tac-toe.h"
 #include "../include/screens.h"
 
-void navigate(enum GameScreen nextScreen)
+void navigate(GameScreen nextScreen)
 {
     // Unload existing screen to prevent any possible segmentation failure
     switch (currentScreen)

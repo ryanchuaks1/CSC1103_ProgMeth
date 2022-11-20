@@ -6,7 +6,7 @@ extern enum GameScreen currentScreen;
 extern struct Sound buttonClickSound;
 extern struct Sound gameStartSound;
 
-enum GameScreen
+typedef enum GameScreen
 {
     MainMenuScreen,
     DifficultyScreen,
@@ -14,15 +14,15 @@ enum GameScreen
     MultiplayerMode,
     NormalAIMode,
     ImpossibleAIMode,
-};
+} GameScreen;
 
 // Potentially move this out as tic-tac-toe as an enum already
-enum GameplayMode
+typedef enum GameplayMode
 {
     Multiplayer,
     MediumAI,
     ImpossibleAI,
-};
+} GameplayMode;
 
 // Main Menu Screens //
 void InitMainMenuScreen();
@@ -37,7 +37,7 @@ void DrawDifficultyScreen();
 void UnloadDifficultyScreen();
 
 // Gameplay Screens //
-void InitGameplayScreen(enum GameplayMode mode);
+void InitGameplayScreen(GameplayMode mode);
 void UpdateGameplayScreen();
 void DrawGameplayScreen();
 void UnloadGameplayScreen();
