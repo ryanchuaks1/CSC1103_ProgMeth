@@ -18,7 +18,7 @@ typedef enum DifficultyMode
     Easy,
     Medium,
     Impossible,
-};
+} DifficultyMode;
 
 bool canMakeMove(char board[3][3], Move move);
 bool makeMove(char board[3][3], Move move, char moveSymbol);
