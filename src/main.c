@@ -6,6 +6,7 @@
  * Global Variables (used across all screens)
  ---------------------------------------------------------------------------------------------------- */
 GameScreen currentScreen;
+bool exitWindowRequested = false;
 float textureScroll = 0.0f;
 Sound buttonClickSound;
 Sound gameStartSound;
@@ -39,7 +40,7 @@ int main(void)
     currentScreen = MainMenuScreen; // Set initial screen to MainMenuScreen();
     InitMainMenuScreen();           // Initiate the main menu screen, Function is called in mainmenu_screen.c
 
-    while (!WindowShouldClose()) // Detect window close button or ESC key
+    while (!WindowShouldClose() && !exitWindowRequested) // Detect window close button or ESC key
     {
         UpdateFrame(); // Generates the Screen, Function is called in main.c
     }

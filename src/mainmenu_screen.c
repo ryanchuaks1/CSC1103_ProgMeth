@@ -11,6 +11,7 @@ static RenderTexture2D screenTexture;
 static Texture2D menuBackground;
 static int framesCounter;
 static int checkButtonHovering;
+extern bool exitWindowRequested;
 
 static Rectangle menuButton[3] = {
     (Rectangle){205, 260, 390, 100}, // Multiplayer
@@ -57,8 +58,8 @@ void UpdateMainMenuScreen()
     }
     else if ((checkButtonHovering == 2) && IsMouseButtonPressed(0)) // Checks if button is hovered on and mouse is clicked
     {
-        UnloadMainMenuScreen(); // If the user hits exit, unload current screen
-        CloseWindow();          // Return exit code 1, "close window" in main.c
+        exitWindowRequested = true; // If the user hits exit, unload current screen
+        // Return exit code 1, "close window" in main.c
     }
 
     textureScroll -= 0.5f;                          // -0.5 pixels in position to the background texture
