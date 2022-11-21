@@ -22,7 +22,7 @@ static Rectangle menuButton[3] = {
 /** ----------------------------------------------------------------------------------------------------
  * @brief Initiate the Main Menu Screen, runs only once when navigating to the screen
  *
- * @date mainmenu_screeb.c last updated 19/11/2022
+ * @date mainmenu_screen.c last updated 19/11/2022
  * @authors Ryan, Kang Le, Clarissa, Sean, Xavier
  ---------------------------------------------------------------------------------------------------- */
 void InitMainMenuScreen()
@@ -59,7 +59,6 @@ void UpdateMainMenuScreen()
     else if ((checkButtonHovering == 2) && IsMouseButtonPressed(0)) // Checks if button is hovered on and mouse is clicked
     {
         exitWindowRequested = true; // If the user hits exit, unload current screen
-        // Return exit code 1, "close window" in main.c
     }
 
     textureScroll -= 0.5f;                          // -0.5 pixels in position to the background texture

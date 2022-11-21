@@ -19,7 +19,7 @@ static Rectangle menuButton[3] = {
 /** ----------------------------------------------------------------------------------------------------
  * @brief Initiate the Difficulty Screen, runs only once when navigating to the screen
  *
- * @date mainmenu_screeb.c last updated 19/11/2022
+ * @date difficulty_screen.c last updated 19/11/2022
  * @authors Ryan, Kang Le, Clarissa, Sean, Xavier
  ---------------------------------------------------------------------------------------------------- */
 void InitDifficultyScreen()
