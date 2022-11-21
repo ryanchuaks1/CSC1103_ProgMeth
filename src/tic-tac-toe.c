@@ -104,10 +104,6 @@ Move getBestMove(char board[3][3], DifficultyMode mode)
     int alpha = -10000;
     int beta = 10000;
 
-    if (mode == Easy)
-    {
-    }
-
     for (int rows = 0; rows < 3; rows++)
     {
         for (int cols = 0; cols < 3; cols++)
@@ -181,7 +177,7 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
                     int score = minimax(duplicateBoard, depth++, alpha, beta, false, mode);
                     if (mode == Medium)
                     {
-                        bestScore = max(bestScore / 7, score);
+                        bestScore = max(bestScore/7 , score);
                         alpha = max(alpha, bestScore);
                         if (beta <= alpha)
                         {
@@ -215,8 +211,8 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
                     int score = minimax(duplicateBoard, depth++, alpha, beta, true, mode);
                     if (mode == Medium)
                     {
-                        bestScore = min(bestScore / 7, score);
-                        alpha = min(alpha, bestScore);
+                        bestScore = min(bestScore/7,score);
+                        beta = min(beta , score);
                         if (beta <= alpha)
                         {
                             break;
