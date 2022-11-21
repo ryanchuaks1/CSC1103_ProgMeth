@@ -28,5 +28,6 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
 char generatePlayerChar(int player);
 char checkWinner(char board[3][3]);
 bool hasAvailableSpot(char board[3][3]);
+int SeanMinimax(char board[3][3], int depth, int alpha , int beta , bool isMaximizing);
 
 #endif

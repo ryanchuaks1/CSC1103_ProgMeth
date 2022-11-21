@@ -94,6 +94,12 @@ void UpdateGameplayScreen()
     {
         pressedButton = 1;
     }
+    else
+    {
+        pressedButton = -1;
+    }
+
+
     if (IsMouseButtonPressed(0) && pressedButton == 1)
     {
         navigate(MainMenuScreen);
@@ -105,6 +111,7 @@ void UpdateGameplayScreen()
         {
             if (canMakeMove(board, hoveredMove) && IsMouseButtonPressed(0))
             {
+                printf("Move used [%d][%d] \n", hoveredMove.column, hoveredMove.row);
                 makeMove(board, hoveredMove, playerSymbol);
                 playerTurn = !playerTurn;
             }
@@ -115,6 +122,7 @@ void UpdateGameplayScreen()
             {
                 if (canMakeMove(board, hoveredMove) && IsMouseButtonPressed(0))
                 {
+                    printf("Player has made move [%d][%d] \n", hoveredMove.row, hoveredMove.column);
                     makeMove(board, hoveredMove, playerSymbol);
                     playerTurn = !playerTurn;
                 }
@@ -122,6 +130,7 @@ void UpdateGameplayScreen()
             else
             {
                 Move bestMove = getBestMove(board, Medium);
+                printf("AI has made move [%d][%d] \n", hoveredMove.row, hoveredMove.column);
                 makeMove(board, bestMove, playerSymbol);
                 playerTurn = !playerTurn;
             }
