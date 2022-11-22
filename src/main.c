@@ -49,17 +49,10 @@ int main(void)
     // This runs upon the while loop ending (meaning the game has exit)
     switch (currentScreen)
     {
-    case 1:
-        UnloadMainMenuScreen();
-        break;
-    case 2:
-        UnloadDifficultyScreen();
-        break;
-    case 3:
-        UnloadGameplayScreen();
-        break;
-    default:
-        break;
+    case 1: UnloadMainMenuScreen(); break;
+    case 2: UnloadDifficultyScreen(); break;
+    case 3: UnloadGameplayScreen(); break;
+    default: break;
     }
     UnloadSound(backgroundMusic); // Unload the background music
     CloseAudioDevice();           // Close audio device
@@ -71,8 +64,6 @@ int main(void)
  * @brief UpdateDrawFrame is continuously looping while the programm is still running (window is not close)
  * This function checks what @param cuurrentScreen is and proceeds to Update and Draw that particular screen
  * Since FPS of program is set to 60, this function loops about 60 times a second
- *
- * @authors Ryan, Kang Le, Clarissa, Sean, Xavier
  ---------------------------------------------------------------------------------------------------- */
 static void UpdateFrame(void)
 {

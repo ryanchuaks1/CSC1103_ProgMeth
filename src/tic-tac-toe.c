@@ -58,7 +58,7 @@ char checkWinner(char board[3][3])
 
     // There's no winner so we check if there's any empty space left yet.
     if (!hasAvailableSpot(board))
-        return 'T';
+        return T;
     return -1;
 }
 

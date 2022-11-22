@@ -35,8 +35,6 @@ void InitDifficultyScreen()
  * This loop is created from main.c in the UpdateDrawFrame() function
  * This function checks if a button is hovered using @param checkButtonHovering. This also checks
  * if the user clicks on one of the buttons
- *
- * @authors Ryan, Kang Le, Clarissa, Sean, Xavier
  ---------------------------------------------------------------------------------------------------- */
 void UpdateDifficultyScreen()
 {
@@ -68,13 +66,11 @@ void UpdateDifficultyScreen()
  * @brief Updates the difficulty screen user interface. This function runs about 60 times a second.
  * This loop is created from main.c in the UpdateDrawFrame() function
  * This function renders the next frame of the program and renders it into the screen.
- *
- * @authors Ryan, Kang Le, Clarissa, Sean, Xavier
  ---------------------------------------------------------------------------------------------------- */
 void DrawDifficultyScreen()
 {
-    BeginDrawing();
-    BeginTextureMode(screenTexture);
+    BeginDrawing();                  // Setup canvas (framebuffer) to start drawing
+    BeginTextureMode(screenTexture); // Begin drawing to render texture
 
     DrawTextureEx(menuBackground, (Vector2){textureScroll, 0}, 0.0f, 2.0f, WHITE);
     DrawTextureEx(menuBackground, (Vector2){menuBackground.width * 2 + textureScroll, 0}, 0.0f, 2.0f, WHITE);
@@ -90,17 +86,15 @@ void DrawDifficultyScreen()
     DrawText("Home", 350, 528, 45, (checkButtonHovering == 2) ? (Color){226, 122, 61, 255} : (Color){90, 49, 24, 255});
 
     EndTextureMode();                                                                                                       // Ends drawing to render texture
-    DrawTextureRec(screenTexture.texture, (Rectangle){0, 0, GetScreenWidth(), -GetScreenHeight()}, (Vector2){0, 0}, WHITE); // Draw the texture onto the canvas (screen)
+    DrawTextureRec(screenTexture.texture, (Rectangle){0, 0, GetScreenWidth(), -GetScreenHeight()}, (Vector2){0, 0}, WHITE); // Draws the screen as a texture (easier unload)
     EndDrawing();                                                                                                           // End canvas drawing
 }
 
 /** ----------------------------------------------------------------------------------------------------
  * @brief Unloads the difficulty Screen, runs only once when called from helpers.c
- *
- * @authors Ryan, Kang Le, Clarissa, Sean, Xavier
  ---------------------------------------------------------------------------------------------------- */
 void UnloadDifficultyScreen()
 {
-    UnloadRenderTexture(screenTexture);
-    UnloadTexture(menuBackground);
+    UnloadRenderTexture(screenTexture); // Unload render texture from GPU memory (VRAM)
+    UnloadTexture(menuBackground);      // Unload texture from GPU memory (VRAM)
 }

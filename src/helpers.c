@@ -60,7 +60,7 @@ void navigate(GameScreen nextScreen)
  * This function was created to reduce code repetition
  * @param buttons[3] contains which buttons to be checked
  *
- * @authors Ryan, Kang Le, Clarissa, Sean, Xavier
+ * @return button value i when hovering over and -1 if not hovering over anything
  ---------------------------------------------------------------------------------------------------- */
 int checkButton(Rectangle buttons[3])
 {
@@ -79,7 +79,7 @@ int checkButton(Rectangle buttons[3])
  * @param a // Number to compare
  * @param b // Number to compare
  *
- * @authors Ryan, Kang Le, Clarissa, Sean, Xavier
+ * @return min or max value accordingly
  ---------------------------------------------------------------------------------------------------- */
 int min(int a, int b)
 {

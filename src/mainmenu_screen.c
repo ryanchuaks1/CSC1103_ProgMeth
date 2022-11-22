@@ -39,8 +39,6 @@ void InitMainMenuScreen()
  * This loop is created from main.c in the UpdateDrawFrame() function
  * This function checks if a button is hovered using @param checkButtonHovering. This also checks
  * if the user clicks on one of the buttons
- *
- * @authors Ryan, Kang Le, Clarissa, Sean, Xavier
  ---------------------------------------------------------------------------------------------------- */
 void UpdateMainMenuScreen()
 {
@@ -73,8 +71,6 @@ void UpdateMainMenuScreen()
  * @brief Updates the main menu screen screen user interface. This function runs about 60 times a second.
  * This loop is created from main.c in the UpdateDrawFrame() function
  * This function renders the next frame of the program and renders it into the screen.
- *
- * @authors Ryan, Kang Le, Clarissa, Sean, Xavier
  ---------------------------------------------------------------------------------------------------- */
 void DrawMainMenuScreen()
 {
@@ -83,7 +79,7 @@ void DrawMainMenuScreen()
 
     // Render background with position set to textureScroll.
     DrawTextureEx(menuBackground, (Vector2){textureScroll, 0}, 0.0f, 2.0f, WHITE);
-    // Render background with position set to textureScroll + width of background.
+    // Render background again with position set to textureScroll + width of background. (this is to allow it to loop infinitely)
     DrawTextureEx(menuBackground, (Vector2){menuBackground.width * 2 + textureScroll, 0}, 0.0f, 2.0f, WHITE);
 
     DrawText(TextSubtext("Tic-Tac-Toe", 0, framesCounter / 4), 100, 60, 90, BLACK);
@@ -104,14 +100,12 @@ void DrawMainMenuScreen()
     DrawText("X", 532, 528, 45, (checkButtonHovering == 2) ? (Color){226, 122, 61, 255} : (Color){90, 49, 24, 255});
 
     EndTextureMode(); // Ends drawing to render texture
-    DrawTextureRec(screenTexture.texture, (Rectangle){0, 0, 800, -800}, (Vector2){0, 0}, WHITE);
+    DrawTextureRec(screenTexture.texture, (Rectangle){0, 0, 800, -800}, (Vector2){0, 0}, WHITE); // Draws the screen as a texture (easier unload)
     EndDrawing(); // End canvas drawing
 }
 
 /** ----------------------------------------------------------------------------------------------------
  * @brief Unloads the Main Menu Screen, runs only once when called from helpers.c
- *
- * @authors Ryan, Kang Le, Clarissa, Sean, Xavier
  ---------------------------------------------------------------------------------------------------- */
 void UnloadMainMenuScreen()
 {
