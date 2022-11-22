@@ -179,9 +179,9 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
                     makeMove(duplicateBoard, attemptedMove, X);
                     // As long as the game doesn't end recursively call it till we get an end state.
                     int score = minimax(duplicateBoard, depth++, alpha, beta, false, mode);
-                    if (mode == Medium)
+                    if (mode == Easy)
                     {
-                        bestScore = max(bestScore / 7, score);
+                        bestScore = max(bestScore / 8, score);
                         alpha = max(alpha, bestScore);
                         if (beta <= alpha)
                         {

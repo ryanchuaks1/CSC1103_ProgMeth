@@ -199,7 +199,7 @@ void UpdateGameplayScreen()
 /** ----------------------------------------------------------------------------------------------------
  * @brief Thic function checks which move is being hovered
  *
- * @return hoveredmove
+ * @return hoveredmove,
  ---------------------------------------------------------------------------------------------------- */
 Move getMoveOnHoveredBoard()
 {
