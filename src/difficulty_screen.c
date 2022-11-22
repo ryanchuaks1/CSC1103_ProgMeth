@@ -12,7 +12,7 @@ static Texture2D menuBackground;
 static int checkButtonHovering;
 
 static Rectangle menuButton[3] = {
-    (Rectangle){250, 260, 300, 100}, // Medium AI
+    (Rectangle){250, 260, 300, 100}, // Easy AI
     (Rectangle){250, 380, 300, 100}, // Impossible AI
     (Rectangle){250, 500, 300, 100}  // Back to Home
 };
