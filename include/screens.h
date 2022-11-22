@@ -12,7 +12,8 @@ typedef enum GameScreen
     DifficultyScreen,
     GameplayScreen,
     MultiplayerMode,
-    NormalAIMode,
+    EasyAIMode,
+    MediumAIMode,
     ImpossibleAIMode,
 } GameScreen;
 
@@ -20,6 +21,7 @@ typedef enum GameScreen
 typedef enum GameplayMode
 {
     Multiplayer,
+    EasyAI,
     MediumAI,
     ImpossibleAI,
 } GameplayMode;

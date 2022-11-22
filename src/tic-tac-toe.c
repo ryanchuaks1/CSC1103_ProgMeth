@@ -101,8 +101,8 @@ Move getBestMove(char board[3][3], DifficultyMode mode)
 {
     int bestScore = -1000;
     Move bestMove;
-    int alpha = -10000;
-    int beta = 10000;
+    int alpha = -1000;
+    int beta = 1000;
 
     for (int rows = 0; rows < 3; rows++)
     {
@@ -118,7 +118,11 @@ Move getBestMove(char board[3][3], DifficultyMode mode)
                 makeMove(duplicatedBoard, attemptedMove, X);
                 int tempScore = 0;
 
-                if (mode == Medium)
+                if (mode == Easy)
+                {
+                    tempScore = minimax(duplicatedBoard, 0, alpha, beta, false, Easy);
+                }
+                else if (mode == Medium)
                 {
                     tempScore = minimax(duplicatedBoard, 0, alpha, beta, false, Medium);
                 }
@@ -177,7 +181,16 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
                     int score = minimax(duplicateBoard, depth++, alpha, beta, false, mode);
                     if (mode == Medium)
                     {
-                        bestScore = max(bestScore/7 , score);
+                        bestScore = max(bestScore / 7, score);
+                        alpha = max(alpha, bestScore);
+                        if (beta <= alpha)
+                        {
+                            break;
+                        }
+                    }
+                    else if (mode == Medium)
+                    {
+                        bestScore = max(bestScore / 6, score);
                         alpha = max(alpha, bestScore);
                         if (beta <= alpha)
                         {
@@ -209,10 +222,19 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
                     makeMove(duplicateBoard, attemptedMove, O);
                     // As long as the game doesn't end recursively call it till we get an end state.
                     int score = minimax(duplicateBoard, depth++, alpha, beta, true, mode);
+                    if (mode == Easy)
+                    {
+                        bestScore = min(bestScore / 7, score);
+                        beta = min(beta, score);
+                        if (beta <= alpha)
+                        {
+                            break;
+                        }
+                    }
                     if (mode == Medium)
                     {
-                        bestScore = min(bestScore/7,score);
-                        beta = min(beta , score);
+                        bestScore = min(bestScore / 6, score);
+                        beta = min(beta, score);
                         if (beta <= alpha)
                         {
                             break;

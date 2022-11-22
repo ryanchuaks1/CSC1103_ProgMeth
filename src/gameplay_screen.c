@@ -135,6 +135,23 @@ void UpdateGameplayScreen()
                 playerTurn = !playerTurn;                   // Swaps the player's turns
             }
         }
+        else if (gameMode == EasyAI) // Check if its Medium AI mode
+        {
+            if (playerTurn == 0) // Checks if its player turn
+            {
+                if (canMakeMove(board, hoveredMove) && IsMouseButtonPressed(0)) // Checks if user can make move and has clicked on grid
+                {
+                    makeMove(board, hoveredMove, playerSymbol); // Makes the move on board
+                    playerTurn = !playerTurn;                   // Swaps the player's turns
+                }
+            }
+            else // Checks if its AI turn
+            {
+                Move bestMove = getBestMove(board, Easy); // Makes the best move according to AI mode
+                makeMove(board, bestMove, playerSymbol);  // Makes the move on the board
+                playerTurn = !playerTurn;                 // Swaps the player's turns
+            }
+        }
         else if (gameMode == MediumAI) // Check if its Medium AI mode
         {
             if (playerTurn == 0) // Checks if its player turn
@@ -244,12 +261,18 @@ void DrawGameplayScreen()
     }
     switch (checkWinner(board)) // Checks if there is a winner and draw text
     {
-    case T: DrawText("Draw", 300, 675, 75, BLACK); break;
-    case X: DrawText("Player X wins!", 145, 675, 75, BLACK); break;
-    case O: DrawText("Player O wins!", 145, 675, 75, BLACK); break;
+    case T:
+        DrawText("Draw", 300, 675, 75, BLACK);
+        break;
+    case X:
+        DrawText("Player X wins!", 145, 675, 75, BLACK);
+        break;
+    case O:
+        DrawText("Player O wins!", 145, 675, 75, BLACK);
+        break;
     }
 
-    EndTextureMode(); // Ends drawing to render texture
+    EndTextureMode();                                                                            // Ends drawing to render texture
     DrawTextureRec(screenTexture.texture, (Rectangle){0, 0, 800, -800}, (Vector2){0, 0}, WHITE); // Draws the screen as a texture (easier unload)
 
     // Draw Home button
@@ -266,6 +289,6 @@ void UnloadGameplayScreen() // Unload texture and render textures from GPU memor
 {
     UnloadRenderTexture(screenTexture);
     UnloadTexture(gameBackground);
-    UnloadRenderTexture(XTextures);     
+    UnloadRenderTexture(XTextures);
     UnloadRenderTexture(OTextures);
 }

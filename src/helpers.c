@@ -42,7 +42,11 @@ void navigate(GameScreen nextScreen)
         InitGameplayScreen(Multiplayer);
         currentScreen = GameplayScreen;
         break;
-    case NormalAIMode:
+    case EasyAIMode:
+        InitGameplayScreen(EasyAI);
+        currentScreen = GameplayScreen;
+        break;
+    case MediumAIMode:
         InitGameplayScreen(MediumAI);
         currentScreen = GameplayScreen;
         break;
