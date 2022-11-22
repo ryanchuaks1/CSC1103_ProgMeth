@@ -190,11 +190,19 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
                         }
                     }
                     else if (mode == Medium)
-                    {
-                        bestScore = max(bestScore / 6, score);
-                        alpha = max(alpha, bestScore);
-                        if (beta <= alpha)
+                    {                        
+                        int minValue  = min(bestScore,score);
+                        int maxValue = max(minValue,score);
+                        alpha= max(alpha,maxValue);
+                        beta = min(beta, maxValue);
+                        if (alpha < beta)
                         {
+                            return bestScore = maxValue;
+                            break;
+                        }
+                        else if (beta < alpha)
+                        {
+                            bestScore=minValue;
                             break;
                         }
                     }
@@ -233,11 +241,19 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
                         }
                     }
                     if (mode == Medium)
-                    {
-                        bestScore = min(bestScore / 6, score);
-                        beta = min(beta, score);
-                        if (beta <= alpha)
+                    {                        
+                        int minValue  = min(bestScore,score);
+                        int maxValue = max(minValue,score);
+                        alpha= max(alpha,maxValue);
+                        beta = min(beta, maxValue);
+                        if (alpha < beta)
                         {
+                            return bestScore = maxValue;
+                            break;
+                        }
+                        else if (beta < alpha)
+                        {
+                            bestScore=minValue;
                             break;
                         }
                     }
