@@ -2,9 +2,11 @@
 #include "../include/helpers.h"
 #include "../include/screens.h"
 
+#include <stdio.h>
+
 char generatePlayerChar(int player)
 {
-    return ((player == 1) ? 'X' : 'O');
+    return ((player == 1) ? X : O);
 }
 
 /// @brief Given a board, check if there's any available spot available to use
@@ -94,53 +96,18 @@ bool canMakeMove(char board[3][3], Move move)
         return true;
     return false;
 }
-
-/// @brief Calls each available spot on the board and determine using minimax which is the next bestMove supposed to be
-/// @param board Given a board, what's the best next move to do next
-/// @return A structure which contains the best determined move to do next
-Move getBestMove(char board[3][3], DifficultyMode mode)
+/// @brief Duplicates a board from originalBoard to duplicateBoard which creates a exact value but different array pointer
+/// @param originalBoard
+/// @param duplicateBoard
+void copyBoard(char originalBoard[3][3], char duplicateBoard[3][3])
 {
-    int bestScore = -1000;
-    Move bestMove;
-    int alpha = -1000;
-    int beta = 1000;
-
     for (int rows = 0; rows < 3; rows++)
     {
         for (int cols = 0; cols < 3; cols++)
         {
-            Move attemptedMove = {rows, cols};
-            if (canMakeMove(board, attemptedMove))
-            {
-                char duplicatedBoard[3][3];
-                copyBoard(board, duplicatedBoard);
-
-                // Attempt to put in the next possible move.
-                makeMove(duplicatedBoard, attemptedMove, X);
-                int tempScore = 0;
-
-                if (mode == Easy)
-                {
-                    tempScore = minimax(duplicatedBoard, 0, alpha, beta, false, Easy);
-                }
-                else if (mode == Medium)
-                {
-                    tempScore = minimax(duplicatedBoard, 0, alpha, beta, false, Medium);
-                }
-                else if (mode == Impossible)
-                {
-                    tempScore = minimax(duplicatedBoard, 0, alpha, beta, false, Impossible);
-                }
-
-                if (tempScore > bestScore)
-                {
-                    bestScore = tempScore;
-                    bestMove = attemptedMove;
-                }
-            }
+            duplicateBoard[rows][cols] = originalBoard[rows][cols];
         }
     }
-    return bestMove;
 }
 
 // TODO: Include alpha beta pruning
@@ -148,11 +115,9 @@ Move getBestMove(char board[3][3], DifficultyMode mode)
 /// @param board
 /// @param depth How deep has the recursion gone
 /// @param isMaximizing Checks which player turn. AI is usually maximizing. Player is usually minimizing.
-/// @return The
-int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing, DifficultyMode mode)
+/// @return 
+int minimax(char board[3][3], bool isMaximizing, int depth, int alpha, int beta, DifficultyMode mode)
 {
-    // Remember that if we do not calculate how to get the results somewhere in this function,
-    // Return bestScore would be unable to run as there is no one returning a value.
     char winResult = checkWinner(board);
     switch (winResult)
     {
@@ -166,34 +131,33 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
 
     if (isMaximizing)
     {
-        int bestScore = -1000;
-        for (int rows = 0; rows < 3; rows++)
+        int bestScore = 1000;
+        for(int row=0; row<3; row++)
         {
-            for (int cols = 0; cols < 3; cols++)
+            for(int col=0; col<3; col++)
             {
-                Move attemptedMove = {rows, cols};
-                if (canMakeMove(board, attemptedMove)) // Check for available spot in the board.
+                Move attemptedMove = { row, col};
+                // Check if the board is used up
+                if (canMakeMove(board, attemptedMove))
                 {
-                    char duplicateBoard[3][3];
-                    copyBoard(board, duplicateBoard);
+                    char savePreviousToken = board[row][col];
+                    board[row][col] = O;
 
-                    makeMove(duplicateBoard, attemptedMove, X);
-                    // As long as the game doesn't end recursively call it till we get an end state.
-                    int score = minimax(duplicateBoard, depth++, alpha, beta, false, mode);
                     if (mode == Easy)
                     {
-                        bestScore = max(bestScore / 8, score);
-                        alpha = max(alpha, bestScore);
+                        int tempScore = minimax(board, 0, depth+1, alpha, beta, mode);
+                        bestScore = max(bestScore/7, tempScore);
                         if (beta <= alpha)
                         {
                             break;
                         }
                     }
                     else if (mode == Medium)
-                    {                        
-                        int minValue  = min(bestScore,score);
-                        int maxValue = max(minValue,score);
-                        alpha= max(alpha,maxValue);
+                    {
+                        int tempScore = minimax(board, 0, depth+1, alpha, beta, mode);
+                        int minValue = min(bestScore, tempScore);
+                        int maxValue = max(minValue, tempScore);
+                        alpha = max(alpha, maxValue);
                         beta = min(beta, maxValue);
                         if (alpha < beta)
                         {
@@ -202,14 +166,18 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
                         }
                         else if (beta < alpha)
                         {
-                            bestScore=minValue;
+                            bestScore = minValue;
                             break;
                         }
                     }
                     else if (mode == Impossible)
                     {
-                        bestScore = max(bestScore / 1, score);
+                        if ((minimax(board,0,depth+1, alpha, beta, mode)<bestScore))
+                        {
+                            bestScore = minimax(board, 0, depth+1, alpha, beta, mode);
+                        }
                     }
+                    board[row][col] = savePreviousToken;
                 }
             }
         }
@@ -217,34 +185,33 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
     }
     else
     {
-        int bestScore = 1000;
-        for (int rows = 0; rows < 3; rows++)
+        int bestScore = -1000;
+        for(int row=0; row<3; row++)
         {
-            for (int cols = 0; cols < 3; cols++)
+            for(int col=0; col<3; col++)
             {
-                Move attemptedMove = {rows, cols};
+                Move attemptedMove = { row, col};
+                // Check if the board is used up
                 if (canMakeMove(board, attemptedMove))
                 {
-                    char duplicateBoard[3][3];
-                    copyBoard(board, duplicateBoard);
+                    char savePreviousToken = board[row][col];
+                    board[row][col] = X;
 
-                    makeMove(duplicateBoard, attemptedMove, O);
-                    // As long as the game doesn't end recursively call it till we get an end state.
-                    int score = minimax(duplicateBoard, depth++, alpha, beta, true, mode);
                     if (mode == Easy)
                     {
-                        bestScore = min(bestScore / 7, score);
-                        beta = min(beta, score);
+                        int tempScore = minimax(board, 1, depth+1, alpha, beta, mode);
+                        bestScore = min(bestScore/7, tempScore);
                         if (beta <= alpha)
                         {
                             break;
                         }
                     }
-                    if (mode == Medium)
-                    {                        
-                        int minValue  = min(bestScore,score);
-                        int maxValue = max(minValue,score);
-                        alpha= max(alpha,maxValue);
+                    else if (mode == Medium)
+                    {
+                        int tempScore = minimax(board, 1, depth+1, alpha, beta, mode);
+                        int minValue = min(bestScore, tempScore);
+                        int maxValue = max(minValue, tempScore);
+                        alpha = max(alpha, maxValue);
                         beta = min(beta, maxValue);
                         if (alpha < beta)
                         {
@@ -253,14 +220,18 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
                         }
                         else if (beta < alpha)
                         {
-                            bestScore=minValue;
+                            bestScore = minValue;
                             break;
                         }
                     }
                     else if (mode == Impossible)
                     {
-                        bestScore = min(bestScore / 1, score);
+                        if ((minimax(board ,1 ,depth+1, alpha, beta, mode) > bestScore))
+                        {
+                            bestScore = minimax(board, 1,depth+1, alpha, beta, mode);
+                        }
                     }
+                    board[row][col] = savePreviousToken;
                 }
             }
         }
@@ -268,16 +239,48 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
     }
 }
 
-/// @brief Duplicates a board from originalBoard to duplicateBoard which creates a exact value but different array pointer
-/// @param originalBoard
-/// @param duplicateBoard
-void copyBoard(char originalBoard[3][3], char duplicateBoard[3][3])
+
+/// @brief Calls each available spot on the board and determine using minimax which is the next bestMove supposed to be
+/// @param board Given a board, what's the best next move to do next
+/// @return A structure which contains the best determined move to do next
+Move getBestMove(char board[3][3], DifficultyMode mode)
 {
-    for (int rows = 0; rows < 3; rows++)
+    Move bestMove;
+    int bestScore = -1000;
+    int alpha = -1000;
+    int beta = 1000;
+
+    for(int row=0; row < 3; row++)
     {
-        for (int cols = 0; cols < 3; cols++)
+        for(int col=0; col<3; col++)
         {
-            duplicateBoard[rows][cols] = originalBoard[rows][cols];
+            Move attemptedMove = { row, col};
+            if (canMakeMove(board, attemptedMove))
+            {
+                char savePreviousToken = board[row][col];
+                board[row][col] =  X;
+                int tempScore;
+
+                if (mode == Easy)
+                {
+                }
+                else if (mode == Medium)
+                {
+                }
+                else if (mode == Impossible)
+                {
+                    tempScore = minimax(board, true, 0, alpha, beta, mode);
+                }
+
+                board[row][col] = savePreviousToken;
+
+                if (tempScore > bestScore)
+                {
+                    bestScore = tempScore;
+                    bestMove = attemptedMove;
+               }
+            }
         }
     }
+    return bestMove;
 }

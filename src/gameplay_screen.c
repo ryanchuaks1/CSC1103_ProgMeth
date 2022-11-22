@@ -196,7 +196,7 @@ void UpdateGameplayScreen()
             }
             else
             {
-                // AI Mode
+
                 Move bestMove = getBestMove(board, Impossible); // Makes the best move according to AI mode
                 makeMove(board, bestMove, playerSymbol);        // Makes the move on the board
                 playerTurn = !playerTurn;                       // Swaps the player's turns
