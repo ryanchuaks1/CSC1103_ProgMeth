@@ -10,6 +10,8 @@ bool exitWindowRequested = false;
 float textureScroll = 0.0f;
 Sound buttonClickSound;
 Sound gameStartSound;
+Sound gameOverSound;
+Sound placeTokenSound;
 
 /** ----------------------------------------------------------------------------------------------------
  * Local functions prototype
@@ -33,6 +35,8 @@ int main(void)
     Sound backgroundMusic = LoadSound("resources/fall-music.wav"); // Loads the music from resources
     buttonClickSound = LoadSound("resources/button_click.wav");    // Load button click sound
     gameStartSound = LoadSound("resources/game_start.wav");        // Load game start sound
+    gameOverSound = LoadSound("resources/game_over.wav");          // Load game start sound
+    placeTokenSound = LoadSound("resources/place_token.wav");      // Load game start sound
     SetSoundVolume(backgroundMusic, 0.5);                          // Sets the volume of the bg music
 
     PlaySound(backgroundMusic); // Plays the background
@@ -49,13 +53,25 @@ int main(void)
     // This runs upon the while loop ending (meaning the game has exit)
     switch (currentScreen)
     {
-    case 1: UnloadMainMenuScreen(); break;
-    case 2: UnloadDifficultyScreen(); break;
-    case 3: UnloadGameplayScreen(); break;
-    default: break;
+    case 1:
+        UnloadMainMenuScreen();
+        break;
+    case 2:
+        UnloadDifficultyScreen();
+        break;
+    case 3:
+        UnloadGameplayScreen();
+        break;
+    default:
+        break;
     }
-    UnloadSound(backgroundMusic); // Unload the background music
-    CloseAudioDevice();           // Close audio device
+    // Unload all sounds
+    UnloadSound(backgroundMusic); 
+    // UnloadSound(buttonClickSound);
+    // UnloadSound(gameStartSound);  
+    // UnloadSound(gameOverSound);   
+    // UnloadSound(placeTokenSound); 
+    CloseAudioDevice();            // Close audio device
     CloseWindow();
     return 0;
 }

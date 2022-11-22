@@ -1,5 +1,6 @@
 #include "../include/tic-tac-toe.h"
 #include "../include/helpers.h"
+#include "../include/screens.h"
 
 char generatePlayerChar(int player)
 {
@@ -66,11 +67,11 @@ char checkWinner(char board[3][3])
 /// @param board
 /// @param move
 /// @param moveSymbol
-/// @return Return true depending on whether it successfully modified the board
 bool makeMove(char board[3][3], Move move, char moveSymbol)
 {
     if (canMakeMove(board, move))
     {
+        PlaySound(placeTokenSound);
         board[move.row][move.column] = moveSymbol;
         return true;
     }

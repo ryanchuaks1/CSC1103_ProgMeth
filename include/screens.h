@@ -5,6 +5,8 @@ extern float textureScroll;
 extern enum GameScreen currentScreen;
 extern struct Sound buttonClickSound;
 extern struct Sound gameStartSound;
+extern struct Sound gameOverSound;
+extern struct Sound placeTokenSound;
 
 typedef enum GameScreen
 {

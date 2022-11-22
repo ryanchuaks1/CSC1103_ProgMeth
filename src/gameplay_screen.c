@@ -25,7 +25,9 @@ RenderTexture2D screenTexture;
 RenderTexture2D XTextures;
 RenderTexture2D OTextures;
 Move hoveredMove;
+
 static int homeHovered = -1;
+static int resetHovered = -1;
 
 /** ----------------------------------------------------------------------------------------------------
  * Local functions prototype
@@ -115,14 +117,27 @@ void UpdateGameplayScreen()
     char playerSymbol = generatePlayerChar(playerTurn); // Generate the player's turn character X or O
     winner = checkWinner(board);                        // Checks if there are any winners
 
-    if (CheckCollisionPointRec(GetMousePosition(), (Rectangle){25, 15, 115, 105})) // Check if Home button is hovered
+    if (CheckCollisionPointRec(GetMousePosition(), (Rectangle){20, 20, 100, 100})) // Check if Home button is hovered
     {
+        PlaySound(buttonClickSound);
         homeHovered = 1;                                         // Return hovered status 1
         IsMouseButtonPressed(0) ? navigate(MainMenuScreen) : -1; // Navigate to main menu if home is clicked
     }
+    else if (CheckCollisionPointRec(GetMousePosition(), (Rectangle){580, 30, 180, 50}))
+    {
+        resetHovered = 1;            // Return hovered status 1
+        if (IsMouseButtonPressed(0)) // Reset board if home is clicked
+        {
+            PlaySound(gameOverSound);
+            playerTurn = 0;   // Sets the current player's turn to default (0 = player turn)
+            winner = -1;      // Sets the current winner to nobody/default
+            resetGrid(board); // Resets the grid
+        }
+    }
     else
     {
-        homeHovered = -1; // return hovered status -1 (nothing/default)
+        resetHovered = -1; // return hovered status -1 (nothing/default)
+        homeHovered = -1;  // return hovered status -1 (nothing/default)
     }
 
     if (winner == -1) // Game continue to run if there is no winner
@@ -276,8 +291,16 @@ void DrawGameplayScreen()
     DrawTextureRec(screenTexture.texture, (Rectangle){0, 0, 800, -800}, (Vector2){0, 0}, WHITE); // Draws the screen as a texture (easier unload)
 
     // Draw Home button
-    DrawRectangleRounded((Rectangle){45, 45, 75, 75}, 0.2, 5, (homeHovered == 1) ? BLACK : GRAY);
-    DrawTriangle((Vector2){25, 55}, (Vector2){140, 55}, (Vector2){82.5, 15}, (homeHovered == 1) ? BLACK : GRAY);
+    DrawRectangleRounded((Rectangle){20, 20, 100, 100}, 0.2, 5, (homeHovered == 1) ? (Color){226, 122, 61, 255} : (Color){90, 49, 24, 255});            // Border
+    DrawRectangleRounded((Rectangle){25, 25, 90, 90}, 0.2, 5, (Color){254, 215, 136, 255});                                                             // Background
+    DrawTriangle((Vector2){30, 60}, (Vector2){110, 60}, (Vector2){70, 30}, (homeHovered == 1) ? (Color){226, 122, 61, 255} : (Color){90, 49, 24, 255}); // Home Triangle
+    DrawRectangleRounded((Rectangle){45, 55, 50, 50}, 0.2, 5, (homeHovered == 1) ? (Color){226, 122, 61, 255} : (Color){90, 49, 24, 255});              // Home Square
+
+    // Draw Reset Button
+
+    DrawRectangleRounded((Rectangle){570, 20, 200, 70}, 0.2, 5, (resetHovered == 1) ? (Color){226, 122, 61, 255} : (Color){90, 49, 24, 255}); // Border
+    DrawRectangleRounded((Rectangle){580, 30, 180, 50}, 0.2, 5, (Color){254, 215, 136, 255});                                                 // Background
+    DrawText("Reset", 608, 31, 45, (resetHovered == 1) ? (Color){226, 122, 61, 255} : (Color){90, 49, 24, 255});
 
     EndDrawing(); // End canvas drawing
 }
