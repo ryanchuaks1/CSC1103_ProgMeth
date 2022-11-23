@@ -29,7 +29,6 @@ char checkWinner(char board[3][3]);
 bool hasAvailableSpot(char board[3][3]);
 
 Move getBestMove(char board[3][3], DifficultyMode mode);
-int minimax(char board[3][3], bool isMaximizing, int depth, int alpha, int beta, DifficultyMode mode);
-
+int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing, DifficultyMode mode);
 
 #endif
