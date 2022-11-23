@@ -119,9 +119,12 @@ void UpdateGameplayScreen()
 
     if (CheckCollisionPointRec(GetMousePosition(), (Rectangle){20, 20, 100, 100})) // Check if Home button is hovered
     {
-        PlaySound(buttonClickSound);
-        homeHovered = 1;                                         // Return hovered status 1
-        IsMouseButtonPressed(0) ? navigate(MainMenuScreen) : -1; // Navigate to main menu if home is clicked
+        homeHovered = 1; // Return hovered status 1
+        if (IsMouseButtonPressed(0))
+        {
+            PlaySound(buttonClickSound);
+            navigate(MainMenuScreen); // Navigate to main menu if home is clicked
+        }
     }
     else if (CheckCollisionPointRec(GetMousePosition(), (Rectangle){580, 30, 180, 50}))
     {
