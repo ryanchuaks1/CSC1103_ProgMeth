@@ -96,6 +96,7 @@ bool canMakeMove(char board[3][3], Move move)
         return true;
     return false;
 }
+
 /// @brief Duplicates a board from originalBoard to duplicateBoard which creates a exact value but different array pointer
 /// @param originalBoard
 /// @param duplicateBoard
