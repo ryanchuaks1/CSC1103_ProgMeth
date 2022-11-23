@@ -2,6 +2,8 @@
 #include "../include/helpers.h"
 #include "../include/screens.h"
 
+#include <stdlib.h>
+
 char generatePlayerChar(int player)
 {
     return ((player == 1) ? 'X' : 'O');
@@ -174,20 +176,25 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
                 Move attemptedMove = {rows, cols};
                 if (canMakeMove(board, attemptedMove)) // Check for available spot in the board.
                 {
+
+
+                    if (mode == Easy)
+                    {
+                        int randNum = rand() % 2;
+                        if (randNum == 1)
+                        {
+                            return 10;
+                            break;
+                        }
+                    }
                     char duplicateBoard[3][3];
                     copyBoard(board, duplicateBoard);
 
                     makeMove(duplicateBoard, attemptedMove, X);
                     // As long as the game doesn't end recursively call it till we get an end state.
-                    int score = minimax(duplicateBoard, depth++, alpha, beta, false, mode);
+                    int score = minimax(duplicateBoard, depth+1, alpha, beta, false, mode);
                     if (mode == Easy)
                     {
-                        bestScore = max(bestScore / 8, score);
-                        alpha = max(alpha, bestScore);
-                        if (beta <= alpha)
-                        {
-                            break;
-                        }
                     }
                     else if (mode == Medium)
                     {                        
@@ -197,18 +204,18 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
                         beta = min(beta, maxValue);
                         if (alpha < beta)
                         {
-                            return bestScore = maxValue;
+                            return bestScore = minValue;
                             break;
                         }
                         else if (beta < alpha)
                         {
-                            bestScore=minValue;
+                            bestScore=maxValue;
                             break;
                         }
                     }
                     else if (mode == Impossible)
                     {
-                        bestScore = max(bestScore / 1, score);
+                        bestScore = max(bestScore, score);
                     }
                 }
             }
@@ -230,13 +237,13 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
 
                     makeMove(duplicateBoard, attemptedMove, O);
                     // As long as the game doesn't end recursively call it till we get an end state.
-                    int score = minimax(duplicateBoard, depth++, alpha, beta, true, mode);
+                    int score = minimax(duplicateBoard, depth+1, alpha, beta, true, mode);
                     if (mode == Easy)
                     {
-                        bestScore = min(bestScore / 7, score);
-                        beta = min(beta, score);
-                        if (beta <= alpha)
+                        int randNum = rand() % 2;
+                        if (randNum == 0)
                         {
+                            return 0;
                             break;
                         }
                     }
@@ -248,18 +255,18 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
                         beta = min(beta, maxValue);
                         if (alpha < beta)
                         {
-                            return bestScore = maxValue;
+                            return bestScore = minValue;
                             break;
                         }
                         else if (beta < alpha)
                         {
-                            bestScore=minValue;
+                            bestScore=maxValue;
                             break;
                         }
                     }
                     else if (mode == Impossible)
                     {
-                        bestScore = min(bestScore / 1, score);
+                        bestScore = min(bestScore, score);
                     }
                 }
             }
