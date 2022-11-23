@@ -1,7 +1,5 @@
 #include <stdio.h>
 #include <stdbool.h>
-#include <limits.h>
-#include <stdlib.h>
 
 #define X 'X'
 #define O 'O'
@@ -13,26 +11,14 @@ struct Move
     int column;
 };
 
-int max(int a, int b);
-int min(int a, int b);
 void generateBoard(char board[3][3]);
 bool canMakeMove(char board[3][3], struct Move move);
 bool makeMove(char board[3][3], struct Move move, char moveSymbol);
 void copyBoard(char originalBoard[3][3], char duplicateBoard[3][3]);
-int minimax(char board[3][3], int depth, int alpha , int beta , bool isMaximizing);
+int minimax(char board[3][3], int depth, bool isMaximizing);
 char generatePlayerChar(int player);
 char checkWinner(char board[3][3]);
 bool hasAvailableSpot(char board[3][3]);
-
-int min(int a, int b)
-{
-    return ((a > b) ? b : a);
-}
-
-int max(int a, int b)
-{
-    return ((a > b) ? a : b);
-}
 
 void generateBoard(char board[3][3])
 {
@@ -157,8 +143,6 @@ struct Move getBestMove(char board[3][3])
 {
     int bestScore = -1000;
     struct Move bestMove;
-    int alpha = -10000;
-    int beta = 10000;
 
     for (int rows = 0; rows < 3; rows++)
     {
@@ -172,7 +156,7 @@ struct Move getBestMove(char board[3][3])
 
                 // Attempt to put in the next possible move.
                 makeMove(duplicatedBoard, attemptedMove, X);
-                int tempScore = minimax(duplicatedBoard, 0, alpha ,beta ,  false);
+                int tempScore = minimax(duplicatedBoard, 0, false);
 
                 if (tempScore > bestScore)
                 {
@@ -191,7 +175,7 @@ struct Move getBestMove(char board[3][3])
 /// @param depth How deep has the recursion gone
 /// @param isMaximizing Checks which player turn. AI is usually maximizing. Player is usually minimizing.
 /// @return The
-int minimax(char board[3][3], int depth, int alpha , int beta, bool isMaximizing)
+int minimax(char board[3][3], int depth, bool isMaximizing)
 {
     // Remember that if we do not calculate how to get the results somewhere in this function,
     // Return bestScore would be unable to run as there is no one returning a value.
@@ -224,12 +208,10 @@ int minimax(char board[3][3], int depth, int alpha , int beta, bool isMaximizing
 
                     makeMove(duplicateBoard, attemptedMove, X);
                     // As long as the game doesn't end recursively call it till we get an end state.
-                    int score = minimax(duplicateBoard, depth++, alpha , beta, false);
-                    bestScore = max(bestScore/10 , score);
-                    alpha = max(alpha, bestScore);
-                    if (beta <= alpha)
+                    int score = minimax(duplicateBoard, depth + 1, false);
+                    if (bestScore < score)
                     {
-                        break;
+                        bestScore = score;
                     }
                 }
             }
@@ -251,12 +233,10 @@ int minimax(char board[3][3], int depth, int alpha , int beta, bool isMaximizing
 
                     makeMove(duplicateBoard, attemptedMove, O);
                     // As long as the game doesn't end recursively call it till we get an end state.
-                    int score = minimax(duplicateBoard, depth++, alpha , beta , true);
-                    bestScore = min(bestScore/7,score);
-                    beta = min(beta , score);
-                    if (beta <= alpha)
+                    int score = minimax(duplicateBoard, depth + 1, true);
+                    if (bestScore > score)
                     {
-                        break;
+                        bestScore = score;
                     }
                 }
             }
