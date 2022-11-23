@@ -23,7 +23,7 @@ static void UpdateFrame(void);
  * This function starts the program with window and sound
  * The control of screens both loading and unloading is done here
  *
- * @date main.c last updated 19/11/2022
+ * @date main.c last updated 23/11/2022
  * @authors Ryan, Kang Le, Clarissa, Sean, Xavier
  ---------------------------------------------------------------------------------------------------- */
 int main(void)

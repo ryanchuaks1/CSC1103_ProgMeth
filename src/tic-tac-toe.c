@@ -71,10 +71,10 @@ char checkWinner(char board[3][3])
 /// @param moveSymbol
 bool makeMove(char board[3][3], Move move, char moveSymbol)
 {
-    if (canMakeMove(board, move))
+    if (canMakeMove(board, move)) // runs the function to check if player can make move
     {
-        PlaySound(placeTokenSound);
-        board[move.row][move.column] = moveSymbol;
+        PlaySound(placeTokenSound);                // playes the token sound
+        board[move.row][move.column] = moveSymbol; // place token according to current player symbol
         return true;
     }
     return false;
@@ -177,7 +177,6 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
                 if (canMakeMove(board, attemptedMove)) // Check for available spot in the board.
                 {
 
-
                     if (mode == Easy)
                     {
                         int randNum = rand() % 2;
@@ -192,15 +191,15 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
 
                     makeMove(duplicateBoard, attemptedMove, X);
                     // As long as the game doesn't end recursively call it till we get an end state.
-                    int score = minimax(duplicateBoard, depth+1, alpha, beta, false, mode);
+                    int score = minimax(duplicateBoard, depth + 1, alpha, beta, false, mode);
                     if (mode == Easy)
                     {
                     }
                     else if (mode == Medium)
-                    {                        
-                        int minValue  = min(bestScore,score);
-                        int maxValue = max(minValue,score);
-                        alpha= max(alpha,maxValue);
+                    {
+                        int minValue = min(bestScore, score);
+                        int maxValue = max(minValue, score);
+                        alpha = max(alpha, maxValue);
                         beta = min(beta, maxValue);
                         if (alpha < beta)
                         {
@@ -209,7 +208,7 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
                         }
                         else if (beta < alpha)
                         {
-                            bestScore=maxValue;
+                            bestScore = maxValue;
                             break;
                         }
                     }
@@ -237,7 +236,7 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
 
                     makeMove(duplicateBoard, attemptedMove, O);
                     // As long as the game doesn't end recursively call it till we get an end state.
-                    int score = minimax(duplicateBoard, depth+1, alpha, beta, true, mode);
+                    int score = minimax(duplicateBoard, depth + 1, alpha, beta, true, mode);
                     if (mode == Easy)
                     {
                         int randNum = rand() % 2;
@@ -248,10 +247,10 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
                         }
                     }
                     if (mode == Medium)
-                    {                        
-                        int minValue  = min(bestScore,score);
-                        int maxValue = max(minValue,score);
-                        alpha= max(alpha,maxValue);
+                    {
+                        int minValue = min(bestScore, score);
+                        int maxValue = max(minValue, score);
+                        alpha = max(alpha, maxValue);
                         beta = min(beta, maxValue);
                         if (alpha < beta)
                         {
@@ -260,7 +259,7 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
                         }
                         else if (beta < alpha)
                         {
-                            bestScore=maxValue;
+                            bestScore = maxValue;
                             break;
                         }
                     }
