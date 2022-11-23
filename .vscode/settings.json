@@ -1,7 +1,5 @@
 {
     "files.associations": {
-        "limits": "c",
-        "type_traits": "c",
-        "tic-tac-toe.h": "c"
+        "screens.h": "c"
     }
 }
