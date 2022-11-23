@@ -269,11 +269,13 @@ void DrawGameplayScreen()
             if (board[rows][cols] == X || board[rows][cols] == O)
             {
                 // Draw the texture and slot it into the slot
-                DrawTextureRec((board[rows][cols] == X) ? XTextures.texture : OTextures.texture, (Rectangle){0, 0, gridSize, -gridSize}, (Vector2){rows * (gridSize + gridThickness) + 155, cols * (gridSize + gridThickness) + 155}, WHITE);
+                DrawTextureRec((board[rows][cols] == X) ? XTextures.texture : OTextures.texture,
+                 (Rectangle){0, 0, gridSize, -gridSize}, (Vector2){rows * (gridSize + gridThickness) + 155, cols * (gridSize + gridThickness) + 155}, WHITE);
             }
             else
             {
-                DrawRectangle(rows * (gridSize + gridThickness) + 155, cols * (gridSize + gridThickness) + 155, gridSize, gridSize, (hoveredMove.column == cols && hoveredMove.row == rows) ? LIGHTGRAY : WHITE);
+                DrawRectangle(rows * (gridSize + gridThickness) + 155, cols * (gridSize + gridThickness) + 155,
+                 gridSize, gridSize, (hoveredMove.column == cols && hoveredMove.row == rows) ? LIGHTGRAY : WHITE);
             }
         }
     }

@@ -4,9 +4,8 @@
 
 #include <stdlib.h>
 
-
 /// @brief Gets the current player char
-/// @param player 
+/// @param player
 /// @return X OR O
 char generatePlayerChar(int player)
 {
@@ -180,7 +179,12 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
                 Move attemptedMove = {rows, cols};
                 if (canMakeMove(board, attemptedMove)) // Check for available spot in the board.
                 {
+                    char duplicateBoard[3][3];
+                    copyBoard(board, duplicateBoard);
 
+                    makeMove(duplicateBoard, attemptedMove, X);
+                    // As long as the game doesn't end recursively call it till we get an end state.
+                    int score = minimax(duplicateBoard, depth + 1, alpha, beta, false, mode);
                     if (mode == Easy)
                     {
                         int randNum = rand() % 2;
@@ -190,15 +194,6 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
                             break;
                         }
                     }
-                    char duplicateBoard[3][3];
-                    copyBoard(board, duplicateBoard);
-
-                    makeMove(duplicateBoard, attemptedMove, X);
-                    // As long as the game doesn't end recursively call it till we get an end state.
-                    int score = minimax(duplicateBoard, depth + 1, alpha, beta, false, mode);
-                    if (mode == Easy)
-                    {
-                    }
                     else if (mode == Medium)
                     {
                         int minValue = min(bestScore, score);
@@ -207,7 +202,7 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
                         beta = min(beta, maxValue);
                         if (alpha < beta)
                         {
-                            return bestScore = minValue;
+                            bestScore = minValue;
                             break;
                         }
                         else if (beta < alpha)
@@ -258,7 +253,7 @@ int minimax(char board[3][3], int depth, int alpha, int beta, bool isMaximizing,
                         beta = min(beta, maxValue);
                         if (alpha < beta)
                         {
-                            return bestScore = minValue;
+                            bestScore = minValue;
                             break;
                         }
                         else if (beta < alpha)
