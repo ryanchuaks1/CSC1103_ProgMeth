@@ -38,12 +38,6 @@ void InitDifficultyScreen()
  ---------------------------------------------------------------------------------------------------- */
 void UpdateDifficultyScreen()
 {
-    textureScroll -= 0.5f;
-    if (textureScroll <= -menuBackground.width * 2)
-    {
-        textureScroll = 0;
-    }
-
     checkButtonHovering = checkButton(menuButton);
     if (checkButtonHovering == 0 && IsMouseButtonPressed(0))
     {
@@ -59,6 +53,11 @@ void UpdateDifficultyScreen()
     {
         PlaySound(gameStartSound);
         navigate(ImpossibleAIMode);
+    }
+    textureScroll -= 0.5f;
+    if (textureScroll <= -menuBackground.width * 2)
+    {
+        textureScroll = 0;
     }
 }
 
