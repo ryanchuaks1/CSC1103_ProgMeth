@@ -4,6 +4,10 @@
 
 #include <stdlib.h>
 
+
+/// @brief Gets the current player char
+/// @param player 
+/// @return X OR O
 char generatePlayerChar(int player)
 {
     return ((player == 1) ? 'X' : 'O');

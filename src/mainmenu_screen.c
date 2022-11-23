@@ -47,12 +47,12 @@ void UpdateMainMenuScreen()
     if ((checkButtonHovering == 0) && IsMouseButtonPressed(0)) // Checks if button is hovered on and mouse is clicked
     {
         PlaySound(gameStartSound); // Play game start sound
-        navigate(MultiplayerMode); // Navigate to Multiplayer mode and respective screen
+        navigate(MultiplayerMode); // Navigate to Multiplayer mode
     }
     else if ((checkButtonHovering == 1) && IsMouseButtonPressed(0)) // Checks if button is hovered on and mouse is clicked
     {
         PlaySound(buttonClickSound); // Play button click sound
-        navigate(DifficultyScreen);  // Navigate to select difficulty mode and respective screen
+        navigate(DifficultyScreen);  // Navigate to select difficulty screen
     }
     else if ((checkButtonHovering == 2) && IsMouseButtonPressed(0)) // Checks if button is hovered on and mouse is clicked
     {
