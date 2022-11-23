@@ -53,24 +53,17 @@ int main(void)
     // This runs upon the while loop ending (meaning the game has exit)
     switch (currentScreen)
     {
-    case 1:
-        UnloadMainMenuScreen();
-        break;
-    case 2:
-        UnloadDifficultyScreen();
-        break;
-    case 3:
-        UnloadGameplayScreen();
-        break;
-    default:
-        break;
+    case 1: UnloadMainMenuScreen(); break;
+    case 2: UnloadDifficultyScreen(); break;
+    case 3: UnloadGameplayScreen(); break;
+    default: break;
     }
     // Unload all sounds
     UnloadSound(backgroundMusic); 
-    // UnloadSound(buttonClickSound);
-    // UnloadSound(gameStartSound);  
-    // UnloadSound(gameOverSound);   
-    // UnloadSound(placeTokenSound); 
+    UnloadSound(buttonClickSound);
+    UnloadSound(gameStartSound);  
+    UnloadSound(gameOverSound);   
+    UnloadSound(placeTokenSound); 
     CloseAudioDevice();            // Close audio device
     CloseWindow();
     return 0;
